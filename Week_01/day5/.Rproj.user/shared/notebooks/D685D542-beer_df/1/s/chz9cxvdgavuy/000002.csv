@@ -1,0 +1,7 @@
+"0","# Changing the type of variables for calories --------------------"
+"0","beer$calories <- as.integer(beer$calories)"
+"0","class(beer$calories)"
+"1","[1]"
+"1"," ""integer"""
+"1","
+"

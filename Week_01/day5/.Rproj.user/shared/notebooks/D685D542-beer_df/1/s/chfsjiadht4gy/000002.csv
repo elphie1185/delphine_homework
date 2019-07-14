@@ -1,0 +1,7 @@
+"0","# Plotting % alcohol vs carbohyadrate ------------------------"
+"0","x_perc <- beer$percent"
+"0","y_carb <- beer$carbohydrates"
+"0","plot(x_perc, y_carb, type ='p', "
+"0","     main = ""Variation of the amount of carbohydrate with %alcohol"","
+"0","     xlab = ""% alcohol"", "
+"0","     ylab = ""carbohydrate"")"

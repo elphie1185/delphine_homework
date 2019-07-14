@@ -1,0 +1,9 @@
+"0","library(RPostgreSQL)"
+"0","library(DBI)"
+"0","my_db_connection <- dbConnect(drv = PostgreSQL(max.con = 1),"
+"0","                              user = username, "
+"0","                              password = password, "
+"0","                              dbname = ""omni_employees"", "
+"0","                              host = ""localhost"")"
+"2","Error in postgresqlNewConnection(drv, ...) : RS-DBI driver: (ÿÿ¯”cannot allocate a new connection -- maximum of 1 connections already opened)
+"

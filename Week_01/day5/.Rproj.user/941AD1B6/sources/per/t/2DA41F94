@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1562599473741.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1063248254",
+    "id" : "2DA41F94",
+    "lastKnownWriteTime" : 1562600384,
+    "last_content_update" : 1562600384597,
+    "path" : "~/codeclan_course/Homework/Week_01/day5/beer_df.Rmd",
+    "project_path" : "beer_df.Rmd",
+    "properties" : {
+        "chunk_output_type" : "inline",
+        "cursorPosition" : "50,0",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

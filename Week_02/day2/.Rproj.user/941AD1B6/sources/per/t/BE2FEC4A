@@ -1,0 +1,27 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1562747684058.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3923921809",
+    "id" : "BE2FEC4A",
+    "lastKnownWriteTime" : 1562695249,
+    "last_content_update" : 1562695249,
+    "path" : "~/codeclan_course/Homework/Week_02/day2/w02_d2_homework_remote.Rmd",
+    "project_path" : "w02_d2_homework_remote.Rmd",
+    "properties" : {
+        "chunk_output_type" : "inline",
+        "cursorPosition" : "26,30",
+        "scrollLine" : "23",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

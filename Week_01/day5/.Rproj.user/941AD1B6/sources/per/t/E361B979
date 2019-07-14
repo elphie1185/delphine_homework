@@ -1,0 +1,33 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1562599532836.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "E361B979",
+    "lastKnownWriteTime" : 4294967300,
+    "last_content_update" : 1562599532836,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "7F7894F4",
+        "caption" : "beer",
+        "contentUrl" : "grid_resource/gridviewer.html?env=package%3ACodeClanData&obj=beer&cache_key=7F7894F4",
+        "displayedObservations" : 172,
+        "environment" : "package:CodeClanData",
+        "expression" : "beer",
+        "object" : "beer",
+        "preview" : 0,
+        "totalObservations" : 172,
+        "variables" : 5
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

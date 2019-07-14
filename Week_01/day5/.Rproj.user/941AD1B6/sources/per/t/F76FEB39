@@ -1,0 +1,33 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1562599910496.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "F76FEB39",
+    "lastKnownWriteTime" : 4294967296,
+    "last_content_update" : 1562599910496,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "E59E8EDA",
+        "caption" : "temp",
+        "contentUrl" : "grid_resource/gridviewer.html?env=package%3ACodeClanData&obj=temp&cache_key=E59E8EDA",
+        "displayedObservations" : 106,
+        "environment" : "package:CodeClanData",
+        "expression" : "temp",
+        "object" : "temp",
+        "preview" : 0,
+        "totalObservations" : 106,
+        "variables" : 12
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

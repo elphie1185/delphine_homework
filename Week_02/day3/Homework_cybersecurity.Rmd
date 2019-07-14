@@ -1,0 +1,75 @@
+Homework:
+What is spear fishing
+Spear phishing is a targeted email scam that obtains unauthorized access to your sensitive data. 
+
+What is malware?
+Malware, is any program or file that is harmful to a computer user. Software intentionally designed to cause damage to a computer, server, client, or computer network. Types of malware can include computer viruses, worms, Trojan horses and spyware.
+
+How did the malware end up on the employees computers?
+Spear phishing campains via word attachment
+Infected email account were then used to infect more finantial institution
+
+What could the employees have done to prevent malware being installed?
+Bank not expecting cybercriminals to be able to atteck from within the bank's systems -> internal systems were not protected.
+
+Multilayered defense approach to protect against malware
+For compromised machine-> ability to identify and block attempt to establish communication with the machine
+stop unsafe download
+
+Kaspersky Lab urges all financial organizations to carefully scan their networks for the presence of Carbanak and, if detected, report the intrusion to law enforcement.
+
+Common cybersecurity attacks
+Ransomware
+Ransomware one of the fastest-growing forms of cyber attacks and has been behind a number of high-profile breaches, including the massive NHS data breach in 2017. It is a type of malicious software that encrypts a victim’s files and demands a payment to release them. However, paying the ransom does not guarantee the recovery of all encrypted data. Staff awareness is the best strategy to manage ransomware threats.
+
+DDoS (distributed denial-of-service) attack
+A DDoS attack is a malicious attempt to disrupt normal web traffic and take a site offline. This is done by flooding a system, server or network with more access requests than it can handle. DDoS attacks are often launched from numerous compromised devices, and are usually distributed globally through botnets.
+
+Viruses
+A virus is a piece of malicious code that is loaded onto a computer without the user’s knowledge. It can replicate itself and spread to other computers by attaching itself to another computer file.
+
+Worms
+Worms are similar to viruses in that they are self-replicating, but they do not need to attach themselves to a program. They continually look for vulnerabilities and report back any weaknesses that are found to the worm author.
+
+MITM (man in the middle)
+An MITM attack is where an attacker alters the communication between two users, impersonating both victims in order to manipulate them and gain access to their data. The users are not aware that they are actually communicating with an attacker rather than each other.
+
+Zero-day attack
+The use of outdated (unpatched) software (e.g. Microsoft XP) opens up opportunities for criminal hackers to take advantage of known vulnerabilities that can bring entire systems down. A zero-day exploit can occur when a vulnerability is made public before a patch or solution has been rolled out by the developer.
+
+Sequel injection
+An SQL (Structured Query Language) injection occurs when an attacker inserts malicious code into a server that uses SQL. SQL injections are only successful when a security vulnerability exists in an application’s software. Successful SQL attacks force a server to provide access to or modify data
+
+Summary:
+
+Carbanak Bank Robbery
+  - target: bank e-payment system + other financial institution
+  - location: worldwide with majority target in Russia, USA, Germany, China and Ukraine
+  
+  $1bn over the course of 2 years
+  Each robbery took about 4months from infecting the first computer in the bank corporate network
+  Carbanak malware -> infect bank network -> access to staff computer and observe the operation of the bank
+  could then mimic the staff to cash out using internet banking and epayment.
+  
+  Other system: criminal inflatted accounts before transferring the excess amount
+  Set ATM to dispense cash at a predeterminate time
+  
+What is Carbanak?
+    - Malware threat targetting financial institution 2013
+    - Theft of financial information especially money
+    - Use spear phishing campains via word attachment
+    - Infected email account were then used to infect more finantial institution
+
+Significant because: 
+      Targetted: money processing services + swift 
+      Could access all the databases
+  
+Malware called Anunak was used. Malware exploited vulneranilities within word and office to open a backdoor called Carbanak. The malware allowed for "espionage, data exfiltration and provide remote access to infected machines". Malware gave them access to the internal banking network to infect the servers controlling ATMs.
+Maware evolved to several types of malware
+
+Questions:
+
+  ?? Why deposit money in banks in China or US?
+  ?? Differences between country and banking security? Why these country in particular were targetted?
+  ?? What is APT
+  ?? exploit chain

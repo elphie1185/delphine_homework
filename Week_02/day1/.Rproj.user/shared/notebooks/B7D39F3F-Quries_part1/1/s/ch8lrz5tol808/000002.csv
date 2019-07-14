@@ -1,0 +1,9 @@
+"0","library(RPostgreSQL)"
+"2","Loading required package: DBI
+"
+"0","library(DBI)"
+"0","my_db_connection <- dbConnect(drv = PostgreSQL(max.con = 1),"
+"0","                              user = username, "
+"0","                              password = password, "
+"0","                              dbname = ""omni_employees"", "
+"0","                              host = ""localhost"")"

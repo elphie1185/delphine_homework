@@ -1,0 +1,2 @@
+"0","dbGetQuery(my_db_connection, "
+"0","           ""SELECT * FROM employees WHERE country != 'Brazil'"")"

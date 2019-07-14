@@ -1,0 +1,124 @@
+```{r}
+library(keyring)
+library(RPostgreSQL)
+library(httr)
+library(purrr)
+keyring_unlock(keyring = "local")
+username <- key_get("postgresql_username", keyring = "local")
+password <- key_get("postgresql_password", keyring = "local")
+keyring_lock("local")
+
+db_connect <- dbConnect(drv = PostgreSQL(max.con = 1), 
+                        user = username, 
+                        password = password, 
+                        dbname = "acme_employees", 
+                        host = "localhost")
+
+rm(list = c("username", "password"))
+```
+
+Join the tables employees and feedback together
+```{r}
+employees_with_feedbacks <- data.frame(dbGetQuery(db_connect, 
+          "SELECT employees.id, employees.first_name, employees.last_name, 
+          employees.email, feedbacks.date, feedbacks.message, 
+          teams.name AS team_name
+          FROM (employees INNER JOIN feedbacks
+                ON employees.id = feedbacks.employee_id)
+          INNER JOIN teams 
+          ON teams.id = employees.team_id
+          "
+          ))
+```
+
+```{r}
+source("api_key.R")
+```
+
+Creating a list which will return the indico result per message
+```{r}
+api_fetcher <- function(url, api_key, message){
+  params <- list(api_key = api_key, 
+                 data = message)
+  response <- POST(url, query = params)
+  if (http_error(response)){
+    stop("Failed to get response.")
+  }
+  return(content(response))
+}
+```
+
+Create a list to convert the results into a vector
+```{r}
+response_unpacker <- function(response_list){
+  # convert an emotion response list into a named vector
+  
+  # stop and throw error if response_list is NULL, or response_list is length 0, 
+  # or response_list$results has length 0	
+  if (length(response_list) == 0){
+    stop("response_unpacker: empty response list")
+  }
+  # setup up an empty named vector to return
+  emotions <- c("anger", "fear", "joy", "sadness", "surprise")
+  # set all 5 elements to NA initially
+  return_vec <- rep(NA, 5)
+    # set names of return_vec using the emotions strings
+  names(return_vec) <- emotions
+  # loop through emotions
+  for (emotion in emotions) {
+    # get the emotion value for this emotion from the response_list
+    emotion_value <- response_list$results[[emotion]]
+    # check that emotion_value not NULL. 
+    # If not, use it to set the appropriate element of return_vec
+    if (!is.null(emotion_value)) {
+      return_vec[emotion] <- emotion_value
+    }
+  }
+  # return return_vec
+  return(return_vec)
+} 
+```
+
+
+```{r}
+emotion_list <- list()
+indico_api <- api_key_second_api
+indico_url <- "https://apiv2.indico.io/emotion"
+for (i in 1:nrow(employees_with_feedbacks)){
+  feedback <- employees_with_feedbacks$message[i]
+  emotion_list <- c(emotion_list, 
+                    api_fetcher(indico_url, indico_api, feedback))
+}
+```
+
+```{r}
+feeling_response <- NULL
+for(i in 1:length(emotion_list)){
+    feeling_response <- c(feeling_response,
+                          response_unpacker(emotion_list[i]))
+}
+
+feeling_results <- matrix(feeling_response, ncol = 5, byrow = TRUE)
+colnames(feeling_results) <- c("anger", "fear", "joy", "sadness", "surprise")
+```
+
+```{r}
+feeling_result_df <- as.data.frame(feeling_results)
+employees_with_feelings <- cbind(employees_with_feedbacks, feeling_result_df)
+```
+
+
+Write into csv
+```{r}
+library(readr)
+write_csv(employees_with_feelings,
+           "~/codeclan_course/Homework/Week_02/day5/emotion_with_feedback.csv")
+```
+
+Disconnect
+```{r}
+dbDisconnect(db_connect)
+```
+
+
+

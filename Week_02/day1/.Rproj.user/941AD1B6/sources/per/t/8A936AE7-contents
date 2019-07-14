@@ -1,0 +1,92 @@
+```{r}
+library(keyring)
+keyring_unlock(keyring = "local")
+username <- key_get("postgresql_username", keyring = "local")
+password <- key_get("postgresql_password", keyring = "local")
+keyring_lock("local")
+```
+
+Connecting from R to the postgres server
+```{r}
+library(RPostgreSQL)
+library(DBI)
+my_db_connection <- dbConnect(drv = PostgreSQL(max.con = 1),
+                              user = username, 
+                              password = password, 
+                              dbname = "omni_employees", 
+                              host = "localhost")
+```
+
+```{r}
+dbGetQuery(my_db_connection, "SELECT * FROM employees WHERE id = 3")
+```
+
+```{r}
+dbGetQuery(my_db_connection, 
+           "SELECT * FROM employees WHERE fte_hours >=0.5")
+```
+
+```{r}
+dbGetQuery(my_db_connection, 
+           "SELECT * FROM employees WHERE country != 'Brazil'")
+```
+
+```{r}
+dbGetQuery(my_db_connection, 
+           "SELECT * FROM employees 
+           WHERE country = 'China' AND start_date >= '2019-01-01'")
+```
+
+```{r}
+dbGetQuery(my_db_connection, 
+           "SELECT * FROM employees 
+           WHERE country = 'China' AND (start_date >= '2019-01-01' OR pension_enrol = TRUE)"
+           )
+```
+
+```{r}
+dbGetQuery(my_db_connection, 
+           "SELECT * FROM employees 
+           WHERE fte_hours >=0.25 AND fte_hours <=0.5"
+           )
+```
+
+```{r}
+dbGetQuery(my_db_connection, "SELECT * FROM employees 
+           WHERE start_date < '2017-01-01' OR start_date > '2017-12-31'")
+```
+
+```{r}
+dbGetQuery(my_db_connection, "SELECT * FROM employees 
+           WHERE start_date NOT BETWEEN '2017-01-01' AND '2017-12-31'")
+```
+
+```{r}
+dbGetQuery(my_db_connection, "SELECT * FROM employees 
+           WHERE (start_date NOT BETWEEN '2016-01-01' AND '2016-12-31') AND fte_hours >= 0.5")
+```
+
+```{r}
+dbGetQuery(my_db_connection, "SELECT * FROM employees 
+           WHERE (EXTRACT(YEAR FROM start_date) = 2016) AND fte_hours >= 0.5")
+```
+
+```{r}
+dbGetQuery(my_db_connection, "SELECT * FROM employees 
+           WHERE country IN ('Spain', 'South Africa', 'Ireland', 'Germany')")
+```
+
+```{r}
+dbGetQuery(my_db_connection, "SELECT * FROM employees WHERE country = 'Greece' AND last_name LIKE 'Mc%'")
+
+```
+
+```{r}
+dbGetQuery(my_db_connection, "SELECT * FROM employees WHERE last_name LIKE '%ere%'")
+```
+
+```{r}
+dbGetQuery(my_db_connection, "SELECT * FROM employees WHERE email IS NULL")
+
+```
+

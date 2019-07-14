@@ -1,0 +1,7 @@
+"0","# Plotting % alcohol vs calories -----------------------------"
+"0","x_perc <- beer$percent"
+"0","y_cal <- beer$calories"
+"0","plot(x_perc, y_cal, type ='p', "
+"0","     main = ""Variation of the amount of calories with %alcohol"","
+"0","     xlab = ""% alcohol"", "
+"0","     ylab = ""calories"")"

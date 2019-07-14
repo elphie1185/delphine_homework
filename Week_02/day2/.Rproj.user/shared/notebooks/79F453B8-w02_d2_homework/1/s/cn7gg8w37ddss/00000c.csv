@@ -1,0 +1,3 @@
+"0","dbGetQuery(conn = my_db_connection, "
+"0","           statement = ""SELECT * FROM wrestlers "
+"0","           WHERE win_percent BETWEEN 50 AND 60"")"

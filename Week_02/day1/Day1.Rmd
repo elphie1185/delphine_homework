@@ -1,0 +1,39 @@
+
+```{r}
+library(httr)
+library(jsonlite)
+library(readr)
+library(purrr)
+source('api_key.R')
+```
+
+```{r}
+ids <- c("tt1285016", "tt0119396", "tt0095250", "tt0457430", "tt1074638")
+
+movie_list <- as.list(rep(0, 5))
+
+for (movie_id in 1:5){
+  movie <- GET("http://www.omdbapi.com/", 
+                query = list(apikey = api_key_for_first_API,
+                i = ids[movie_id])
+            )
+  http_status(movie)
+  movie_data <- content(movie)
+  movie_list[movie_id] <- list(movie_data)
+}
+```
+
+```{r}
+write_json(movie_list, "json_movie_list.json", 
+           pretty = TRUE, auto_unbox = TRUE)
+```
+
+Find the average IMDB rating of your 5 films.
+```{r}
+jason_fil <- read_file("json_movie_list.json")
+movie_list_json <- fromJSON(jason_fil)
+
+```
+
+Can you write your code so that it works for any number of films, just by giving their IDs?
+Can you save the output as a CSV?

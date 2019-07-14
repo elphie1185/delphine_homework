@@ -1,0 +1,4 @@
+"0","dbGetQuery(my_db_connection, "
+"0","           ""SELECT * FROM employees "
+"0","           WHERE fte_hours >=0.25 AND fte_hours <=0.5"""
+"0","           )"

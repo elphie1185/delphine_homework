@@ -1,0 +1,5 @@
+"0","jason_fil <- read_file(""json_movie_list.json"")"
+"0","movie_list_json <- fromJSON(jason_fil)"
+"0","movie_df <- subset(movie_list[, -15])"
+"2","Error in movie_list[, -15] : incorrect number of dimensions
+"

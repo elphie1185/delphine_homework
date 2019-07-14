@@ -1,0 +1,2 @@
+"0","dbGetQuery(my_db_connection, ""SELECT * FROM employees "
+"0","           WHERE country IN ('Spain', 'South Africa', 'Ireland', 'Germany')"")"

@@ -1,0 +1,2 @@
+"0","dbGetQuery(my_db_connection, ""SELECT * FROM employees "
+"0","           WHERE (EXTRACT(YEAR FROM start_date) = 2016) AND fte_hours >= 0.5"")"

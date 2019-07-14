@@ -1,0 +1,14 @@
+"0","library(httr)"
+"0","library(jsonlite)"
+"0","library(readr)"
+"0","library(purrr)"
+"2","
+Attaching package: ‘purrr’
+
+"
+"2","The following object is masked from ‘package:jsonlite’:
+
+    flatten
+
+"
+"0","source('api_key.R')"

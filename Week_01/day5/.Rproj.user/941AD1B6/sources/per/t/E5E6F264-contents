@@ -1,0 +1,51 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+# Importng library -----------------------------------
+library(CodeClanData)
+library(purrr)
+```
+
+Looking at the Game of Thrones data set
+```{r}
+View(game_of_thrones)
+```
+
+```{r}
+class(game_of_thrones)
+length(game_of_thrones)
+```
+
+```{r}
+# Finding the type of data for each element of the list ------------
+list_elements <- c(map(game_of_thrones, class), 
+                   map(game_of_thrones, length))
+list_summary <- matrix(list_elements, nrow = 2, ncol = 10, byrow = TRUE)
+rownames(list_summary) <- c("Class of Variable", "Number of Elements")
+colnames(list_summary) <- names(game_of_thrones)
+list_summary
+```
+
+```{r}
+# Checking gender equality in Game of Thrones --------------------
+gender <- map(game_of_thrones$characters, "gender")
+unique(gender)
+num_female <- sum(gender == "Female")
+num_male <- 434 - num_female
+if (num_female > num_male){
+  print(paste("There are", num_female, "women.", 
+              "This is great!"))
+} else {
+  print(paste("There are only", num_female, "women.",
+              "They need to hire more women"))
+}
+```
+
+

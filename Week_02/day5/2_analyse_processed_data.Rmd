@@ -1,0 +1,48 @@
+Analyse the csv file and return information
+Angriest employee
+```{r}
+employee_feelings <- read_csv("~/codeclan_course/Homework/Week_02/day5/emotion_with_feedback.csv")
+angry_employee <- employee_feelings[which.max(employee_feelings$anger),]
+print(paste("The team with the angriest employee is", 
+            angry_employee$team_name))
+```
+
+Team emotional status
+```{r}
+emotion_df <- subset(employee_feelings[, 7:12])
+
+team_emotion <- aggregate(emotion_df[,2:6], 
+                          list(emotion_df$team_name), 
+                          mean)
+team_emotion
+```
+
+Which team is the happiest
+```{r}
+happy_team <- team_emotion[which.max(team_emotion$joy), ]
+print(paste("The happiest team in the company is", 
+            happy_team$Group.1))
+```
+
+
+Some employees may have submitted more than one feedback, and this could bias our results in favour of their opinions. Can we get a more balanced picture of the emotional state of the Acme Corporation teams by including only the most recent feedback by an employee? Feel free to try this in SQL or R, it won’t make any real difference in efficiency with such a small dataset.
+```{r}
+library(dplyr)
+arrange(employee_feelings,
+        employee_feelings$id,
+        employee_feelings$date)
+if(count(id >1))
+```
+
+
+
+
+
+Try any other analyses you are interested in! Play around a little :-)
+Employees which is the most scared
+```{r}
+scared_employee <- employee_feelings[which.max(employee_feelings$fear),]
+scared_employee
+```
+
+

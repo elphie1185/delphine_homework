@@ -1,0 +1,105 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+Importing libraries
+```{r}
+library(CodeClanData)
+```
+
+
+Looking at the temp data set
+```{r}
+View(temp)
+```
+
+```{r}
+dim(temp)
+class(temp)
+```
+
+```{r}
+# Calculating sums and averages per columns -----------------------
+sum_and_mean_temp <- c(colMeans(temp), colSums(temp))
+monthly_data <- matrix(round(sum_and_mean_temp, digits = 2), 
+                       nrow = 2, ncol = 12, byrow = TRUE)
+rownames(monthly_data) <- c("Average temperature", "Temperature Sum")
+colnames(monthly_data) <- colnames(temp)
+monthly_data
+```
+
+```{r}
+#Plotting the average temperature per month
+y1 <- colMeans(temp)
+x1 <- colnames(temp)
+plot(y1, type ='p', 
+     main = "Average Temperature Per Month 1910 to 2015",
+     xlab = "Month", 
+     ylab = "Average Temperature in oC")
+```
+
+
+```{r}
+# Showing the evolution of the mean temperature over 106 years ------
+y2 <- rowMeans(temp)
+x2 <- 1910:2015
+plot(x2, y2, type ='l', 
+     main = "Average Temperature Per Year",
+     xlab = "Year", 
+     ylab = "Average Temperature in oC")
+
+```
+
+```{r}
+# Looking at the progression of the temperature in the summer months
+summer_df <- temp[ , 6:8]
+
+# Calculating the average summer temperature ----------------------
+av_summer_temp <- mean(summer_df)
+
+# Calculating the number of years with summer temperature above average\
+num_hot_sum <- sum((rowMeans(summer_df) > mean(summer_df)))
+per_hot_summer <- round((num_hot_sum / nrow(summer_df)) * 100, 
+                        digits = 2)
+print(paste0(per_hot_summer, "% of summer were hotter than average"))
+```
+
+```{r}
+# Plotting the variation of summer temperature --------------------
+y3 <- rowMeans(summer_df)
+x3 <- 1910:2015
+plot(x3, y3, type ='l', 
+     main = "Average Summer Temperature Per Year",
+     xlab = "Year", 
+     ylab = "Average Temperature in oC")
+
+```
+
+```{r}
+hot_years <- c()
+for (i in (1:nrow(summer_df))){
+        sum_temp_i <- mean(summer_df[i])
+        if (sum_temp_i > av_summer_temp){
+                hot_years <- c(hot_years, as.integer(i + 1909))
+        }
+}
+hot_years
+```
+
+```{r}
+years <- 1910:2015
+```
+
+```{r}
+hot_summers <- rowMeans(summer_df) > mean(summer_df)
+```
+```{r}
+length(years[hot_summers])
+```
+

@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1562599771664.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "E04F99DB",
+    "lastKnownWriteTime" : 0,
+    "last_content_update" : 1562599771664,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "id" : "8fde111c8b96458f84576b713555785c",
+        "name" : "game_of_thrones",
+        "title" : "game_of_thrones"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "object_explorer"
+}

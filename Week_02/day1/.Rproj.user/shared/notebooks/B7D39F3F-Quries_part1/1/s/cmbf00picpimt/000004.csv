@@ -1,0 +1,3 @@
+"0","dbGetQuery(my_db_connection, "
+"0","           ""SELECT * FROM employees "
+"0","           WHERE country = 'China' AND start_date >= '2019-01-01'"")"

@@ -1,0 +1,6 @@
+"0","sum((rowMeans(summer_df) > mean(summer_df)))
+"
+"1","[1]"
+"1"," 51"
+"1","
+"

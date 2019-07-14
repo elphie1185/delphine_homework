@@ -1,0 +1,19 @@
+```{r}
+library(keyring)
+keyring_unlock(keyring = "local")
+username <- key_get("postgresql_username", keyring = "local")
+password <- key_get("postgresql_password", keyring = "local")
+keyring_lock("local")
+```
+
+Connecting from R to the postgres server
+```{r}
+library(RPostgreSQL)
+library(DBI)
+my_db_connection <- dbConnect(drv = PostgreSQL(max.con = 1),
+                              user = username, 
+                              password = password, 
+                              dbname = "omni_employees", 
+                              host = "localhost")
+```
+

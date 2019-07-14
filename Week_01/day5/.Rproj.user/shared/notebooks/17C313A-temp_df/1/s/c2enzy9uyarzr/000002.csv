@@ -1,0 +1,8 @@
+"0","# Showing the evolution of the mean temperature over 106 years ------"
+"0","y2 <- rowMeans(temp)"
+"0","x2 <- 1910:2015"
+"0","plot(x2, y2, type ='l', "
+"0","     main = ""Average Temperature Per Year"","
+"0","     xlab = ""Year"", "
+"0","     ylab = ""Average Temperature in oC"")"
+"0",""

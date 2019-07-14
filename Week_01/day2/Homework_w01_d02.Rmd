@@ -1,0 +1,129 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+Part 1
+```{r}
+stock_prices <- c(23, 27, 23, 21, 34, 24, 25, 30, 37, 30)
+day_of_week <- rep(c('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'), times = 2)
+day_of_week
+```
+Factor's are the same as character vectors but R assigns them as numbers
+```{r}
+day_of_week_factor <- as.factor(day_of_week)
+day_of_week_factor
+```
+Created a vector called named_stock_prices, which is stock prices, named with days of the week.
+
+```{r}
+named_stock_prices <- stock_prices
+names(named_stock_prices) <- c(day_of_week)
+head(named_stock_prices)
+```
+
+
+Make a data frame called stock_data with the stock price and day of the week information in it, and View the result. 
+This will assign the name stock_prices to stock_prices and day_of_week to day_of_week
+```{r}
+stock_data <- data.frame(stock_prices = stock_prices, day_of_week = day_of_week)
+stock_data
+```
+
+
+Make a matrix called stock_matrix with 2 columns and 5 rows, so that the stock prices for one week are the first column, and the stock prices for the second week are the second column.
+```{r}
+stock_matrix <- matrix(stock_data$stock_prices, nrow = 5, byrow = FALSE)
+stock_matrix
+```
+
+
+Make a list called stock_list with named elements, that has the individual vectors of stock_prices and day_of_week along with the matrix you made in question 4.
+```{r}
+stock_list <- list(stock_prices = stock_prices, day_of_week = day_of_week, stock_matrix = stock_matrix)
+stock_list
+```
+
+
+Part 2
+In this part of the homework you will practice selecting elements from vectors, data frames, matrices and lists.
+Select the 4th, 5th and 6th stock prices from stock_prices. Alternative stock_prices[c(4, 5, 6)]
+```{r}
+stock_prices[4:6]
+```
+
+
+Select the stock prices greater than 30 from stock_prices.
+```{r}
+stock_prices[stock_prices > 30]
+```
+
+
+Select the day_of_week column from the stock_data data frame.
+```{r}
+stock_data$day_of_week
+```
+
+Select the rows of the stock_data data frame where the stock_prices is less than 25.  Alternative subset(stock_data, stock_prices <25)
+```{r}
+stock_data[stock_data$stock_prices < 25, ]
+```
+
+
+Select the 1st column of the matrix
+```{r}
+stock_matrix[ , 1]
+```
+
+
+Select the 3rd row of the matrix
+```{r}
+stock_matrix[3, ]
+```
+
+Select the 3rd element in the 1st row of the matrix
+```{r}
+dim(stock_matrix)
+```
+```{r}
+stock_matrix[1, 3]
+```
+
+
+Select the matrix stock_matrix from stock_list.
+Need doube bracket to show you the actual matrix object
+Single brack will only return the element as a list!
+```{r}
+stock_list[[3]]
+```
+
+
+3 Extension
+Download the tidyquant library.
+```{r}
+install.packages("tidyquant")
+```
+
+Use it to get stock prices from a company of your choice from the current year. You’ll need to look up the help file to do this.
+```{r}
+library(tidyquant)
+```
+
+```{r}
+google_prices <- tq_get("GOOGL", get = "stock.prices", from = "2019-01-01")
+google_prices$open <- NULL
+google_prices$high <- NULL
+google_prices$low <- NULL
+google_prices$volume <- NULL
+google_prices$adjusted <- NULL
+
+```
+
+
+
+Edit the data frame so only columns are date and closing.
+Subset to find the rows where closing price is higher than average.
+
+
+
+

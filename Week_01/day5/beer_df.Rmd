@@ -1,0 +1,103 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(CodeClanData)
+library(purrr)
+```
+
+
+Looking at the beer data set
+```{r}
+View(beer)
+```
+
+```{r}
+dim(beer)
+class(beer)
+```
+
+```{r}
+# Checking the type of variables in beer -------------------------
+class(beer$percent)
+class(beer$calories)
+class(beer$carbohydrates)
+```
+
+```{r}
+# Changing the type of variables for calories --------------------
+beer$calories <- as.integer(beer$calories)
+class(beer$calories)
+```
+
+```{r}
+# Creating a summary table for sums and means --------------------
+sum_and_mean <- c(sum(beer$percent), mean(beer$percent), 
+                  sum(beer$calories), mean(beer$calories), 
+                  sum(beer$carbohydrates), mean(beer$carbohydrates))
+beer_summary <- matrix(round(sum_and_mean, digits = 2), 
+                       nrow = 2, ncol = 3, byrow = FALSE)
+colnames(beer_summary) <- c("Percent", "Calories", "Carbohydrates")
+rownames(beer_summary) <- c("Total Sum", "Average")
+beer_summary
+```
+
+```{r}
+# Checking the number percentage and calories of beer which have ------
+# a number of carbohydrate below average
+low_carb <- subset(beer, beer$carbohydrates <= mean(beer$carbohydrates))
+
+perc_low_carb <- round((nrow(low_carb) / nrow(beer)) * 100, 
+                       digits = 2)
+mean_cal_low_carb <- round(mean(low_carb$calories), digits = 2)
+mean_per_low_carb <- round(mean(low_carb$percent), digits = 2)
+
+paste(perc_low_carb, "% of beer have less than average carbohydrates.",
+      "These beers contain on average", mean_per_low_carb, "% alcohol", 
+      "and", mean_cal_low_carb, "calories")
+
+```
+
+```{r}
+# Checking brewers and brand of beers with most or least of.... --------
+min_and_max_subset <- subset(beer, 
+                             beer$carbohydrates == min(beer$carbohydrates)| 
+                             beer$carbohydrates == max(beer$carbohydrates)| 
+                             beer$calories == min(beer$calories)| 
+                             beer$calories == max(beer$calories)| 
+                             beer$percent == min(beer$percent)| 
+                             beer$percent == max(beer$percent))
+min_and_max_subset
+```
+
+```{r}
+# Plotting % alcohol vs carbohyadrate ------------------------
+x_perc <- beer$percent
+y_carb <- beer$carbohydrates
+plot(x_perc, y_carb, type ='p', 
+     main = "Variation of the amount of carbohydrate with %alcohol",
+     xlab = "% alcohol", 
+     ylab = "carbohydrate")
+```
+
+```{r}
+# Plotting % alcohol vs calories -----------------------------
+x_perc <- beer$percent
+y_cal <- beer$calories
+plot(x_perc, y_cal, type ='p', 
+     main = "Variation of the amount of calories with %alcohol",
+     xlab = "% alcohol", 
+     ylab = "calories")
+```
+
+We can see there is a strong correlation between the % of alcohol and 
+the amount of calories in the beer
+
+

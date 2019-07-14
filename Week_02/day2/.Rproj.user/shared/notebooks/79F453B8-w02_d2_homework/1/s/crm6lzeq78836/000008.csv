@@ -1,0 +1,13 @@
+"0","dbGetQuery(conn = my_db_connection, "
+"0","           statement = ""SELECT * FROM wrestlers"
+"0","           WHERE (born IN ('Mexico', 'USA', 'United Kingdom', 'Finland', 'Argentina', 'New Zealand', 'Australia', 'Canada', 'Italy', 'Russia)) AND (born = 'I%')"")"
+"2","Error in postgresqlExecStatement(conn, statement, ...) : 
+  RS-DBI driver: (could not Retrieve the result : ERROR:  syntax error at or near ""I""
+LINE 2: ... 'Australia', 'Canada', 'Italy', 'Russia)) AND (born = 'I)
+                                                                   ^
+)
+"
+"2","Could not create execute: SELECT * FROM wrestlers
+           WHERE (born IN ('Mexico', 'USA', 'United Kingdom', 'Finland', 'Argentina', 'New Zealand', 'Australia', 'Canada', 'Italy', 'Russia)) AND (born = 'I%')"
+"1","NULL
+"

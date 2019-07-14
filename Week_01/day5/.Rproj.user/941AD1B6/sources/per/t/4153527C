@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1562599906445.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2113756447",
+    "id" : "4153527C",
+    "lastKnownWriteTime" : 1562600384,
+    "last_content_update" : 1562600384716,
+    "path" : "~/codeclan_course/Homework/Week_01/day5/temp_df.Rmd",
+    "project_path" : "temp_df.Rmd",
+    "properties" : {
+        "chunk_output_type" : "inline",
+        "cursorPosition" : "102,26",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

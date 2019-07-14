@@ -1,0 +1,7 @@
+"0","#Plotting the average temperature per month"
+"0","y1 <- colMeans(temp)"
+"0","x1 <- colnames(temp)"
+"0","plot(y1, type ='p', "
+"0","     main = ""Average Temperature Per Month 1910 to 2015"","
+"0","     xlab = ""Month"", "
+"0","     ylab = ""Average Temperature in oC"")"

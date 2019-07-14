@@ -1,0 +1,8 @@
+"0","# Plotting the variation of summer temperature --------------------"
+"0","y3 <- rowMeans(summer_df)"
+"0","x3 <- 1910:2015"
+"0","plot(x3, y3, type ='l', "
+"0","     main = ""Average Summer Temperature Per Year"","
+"0","     xlab = ""Year"", "
+"0","     ylab = ""Average Temperature in oC"")"
+"0",""

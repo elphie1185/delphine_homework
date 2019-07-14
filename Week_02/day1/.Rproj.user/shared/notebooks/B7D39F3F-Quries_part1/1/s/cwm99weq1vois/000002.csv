@@ -1,0 +1,2 @@
+"0","dbGetQuery(my_db_connection, ""SELECT * FROM employees "
+"0","           WHERE start_date NOT BETWEEN '2017-01-01' AND '2017-12-31'"")"

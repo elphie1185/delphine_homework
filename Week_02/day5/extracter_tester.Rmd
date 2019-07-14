@@ -1,0 +1,31 @@
+Load libraries
+```{r}
+library(testthat)
+```
+
+Test that the function returns an error with 0 length list
+```{r}
+test_that("list of length 0 returns an error", {
+  test_list <- c()
+  expect_error(response_unpacker(test_list))
+})
+```
+
+Test that the resturned class is a vector
+```{r}
+test_that("function returns vector", {
+  test_list <- list("anger" = 0.308, 
+                    "fear" = 0.187, 
+                    "joy" = 0.0955, 
+                    "sadness" = 0.359, 
+                    "surprise" = 0.0508)
+  output <- response_unpacker(test_list)
+  expected_output <- c(0.308, 0.187, 0.0955, 0.0359, 0.0508)
+  expect_is(output, class = "vector")
+  expect_equal(output, expected_output)
+})
+```
+
+
+
+
