@@ -1,0 +1,158 @@
+Load libraries
+```{r}
+library(prob)
+library(gtools)
+```
+
+If I roll a six-sided dice once, what is the probability of getting a number less than 5?
+```{r}
+prob_less_than_five <- 2 / 3
+```
+
+How many outcomes are there in the sample space of an experiment in which we toss three dice?
+```{r}
+three_roll_size <- nrow(rolldie(3))
+three_roll_size
+```
+
+Continuing with the three dice rolling experiment, what is the probability of getting a total of the three dice equal to 5, 6 or 7?
+```{r}
+sum_equal_five_six_seven <- nrow(subset(rolldie(3), 
+                                  (X1 +  X2 + X3) %in% c(5, 6, 7)))
+prob_equal_five_six_seven <- sum_equal_five_six_seven / three_roll_size
+prob_equal_five_six_seven
+```
+
+how many outcomes lie within this event total_equals_5_6_7 (i.e. how large is the event space)?
+```{r}
+sum_equal_five_six_seven
+```
+
+We worked out the size of the sample space for this experiment in question 2. How do the sizes of the sample and event spaces relate to the probability from part i?
+What assumptions do we apply in answering part iii?
+```{r}
+What???
+```
+
+
+4. Five chairs are in a room along with five people of differing height. The people sit down randomly on the chairs. What is the probability that they sit in order of decreasing height, left to right?
+```{r}
+prob_sit_in_order <- 1 / nrow(permutations(n = 5, r = 5, 
+                                           repeats.allowed = FALSE))
+prob_sit_in_order
+```
+
+5. I roll six dice: i. what is the probability I see the numbers 6, 5, 4, 3, 2 and 1 in order on the dice, left to right? ii. what is the probability I see one each of the numbers 6, 5, 4, 3, 2 and 1 on the dice regardless of order?
+```{r}
+sample_space <- nrow(rolldie(6))
+num_event <- nrow(combinations(n = 6, r = 6, 
+                               repeats.allowed = FALSE))
+prob_all_diff <- num_event / sample_space
+prob_all_diff
+```
+
+6. If I draw a single card from a 52-card deck, and it is black, what is the probability that its suit is spades? 
+```{r}
+prob_spade_given_black <- 0.5
+```
+
+7. Eight patients: Alice, Bob, Carmen, Dinesh, Ella, Fergus, Gianna and Henry are waiting to see a doctor, but only five appointment slots are left today.
+In how many different orders can the doctor see patients today?
+```{r}
+patients <- c("Alice", "Bob", "Carmen", "Dinesh", "Ella", "Fergus",
+             "Gianna", "Henry")
+sample_space_appointment <- data.frame(permutations(n = 8, r = 5, 
+                                              repeats.allowed = FALSE))
+colnames(sample_space_appointment) <- c("Patient1", "Patient2", "Patient3", 
+                                        "Patient4", "Patient5")
+nrow(sample_space_appointment)
+```
+
+What is the probability of Gianna and Danesh both being seen today?
+```{r}
+Gianna_and_Danesh <- c(4, 7)
+
+both_seen_today <- subset(sample_space_appointment,
+                          isin(sample_space_appointment, Gianna_and_Danesh) ==                           TRUE)
+
+nrow(both_seen_today)
+```
+
+
+What is the probability of Gianna being seen before Dinesh today?
+```{r}
+G_before_D <- subset(sample_space_appointment,
+                          isin(sample_space_appointment, 
+                               Gianna_and_Danesh, 
+                               ordered = TRUE) == TRUE)
+nrow(G_before_D)
+```
+
+Carmen and Henry have now been triaged as high priority and will be seen in the first two available slots, although their order hasn’t yet been determined. In how many different orders can the patients now be seen?
+```{r}
+C_and_H_first <- permutations(n = 2, r = 2, repeats.allowed = FALSE)
+nrow(C_and_H_first)
+everyone_else <- permutations(n = 6, r = 3, repeats.allowed = FALSE)
+nrow(everyone_else)
+total_combination_C_and_H_first <- 240
+```
+
+8. If order is not significant, how many ways are there to select a 5 student quiz team from a group of 8 students?
+```{r}
+number_of_quiz <- nrow(combinations(n = 8, r = 5, repeats.allowed = FALSE))
+number_of_quiz
+```
+
+9. (harder) How would your answer above change if a team captain had to be selected for each team?
+```{r}
+possible_captain <- 8
+rest_of_team <- nrow(combinations(n = 7, r = 4, repeats.allowed = FALSE))
+number_team_with_captain <- 8 * rest_of_team
+number_team_with_captain
+```
+
+10. The following data from a sample of 120 families shows the record of university attendance by mothers and their eldest sons.
+- in 32 families, both the mother and son attended university; - in 31 families, neither the mother nor the son attended university - in 22 families, the mother attended university while the son did not - in 35 families, the son attended university while the mother did not. 
+
+Arrange the data above in a convenient dataframe and answer the following questions: 
+```{r}
+mother_uni <- c(32, 22)
+mother_no_uni <- c(35, 31)
+uni_data <- data.frame(mother_uni, mother_no_uni)
+uni_data <- cbind(uni_data, rowSums(uni_data))
+uni_data <- rbind(uni_data, colSums(uni_data))
+colnames(uni_data) <- c("Mother_uni", "Mother_not_in_uni", "sum")
+rownames(uni_data) <- c("Son_uni", "Son_no_uni", "sum")
+uni_data
+```
+
+i. What is the probability that a son attended university given that his mother attended university?
+```{r}
+s_uni_given_mum_uni <- round(32 / 54, digits = 2)
+print(paste("The probability of a son attending uni given his mother did is", 
+            s_uni_given_mum_uni * 100, "%"))
+```
+
+
+ii. What is the probability that a son attended university given that his mother did not attend university?
+```{r}
+s_uni_given_mum_no_uni <- round(32 / 66, digits = 2)
+print(paste("The probability of a son attending uni given his mother did is", 
+            s_uni_given_mum_no_uni * 100, "%"))
+```
+
+iii. Is attending university by the son independent of whether his mother attended university?
+```{r}
+prob_mum_and_son_in_uni <- 32/120
+prob_mum_in_uni <- 54/120
+prob_son_in_uni <- 67/120
+if(prob_mum_and_son_in_uni == (prob_mum_in_uni*prob_son_in_uni)){
+  print("The son attending uni is independent of whether or not his mum did")
+} else {
+  print("The son attending uni is dependent of whether or not his mum did")
+}
+
+```
+
+
+Hint - code to set up dataframe - try yourself first though!
