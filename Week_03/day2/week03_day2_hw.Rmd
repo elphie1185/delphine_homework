@@ -1,0 +1,120 @@
+Anscombe’s quartet exists as a packaged list in R. Run data(anscombe) and then have a look at the str() of the  list. Find the names of the eight variables.
+```{r}
+data(anscombe)
+str(anscombe)
+summary(anscombe)
+```
+
+```{r}
+print(paste("The names of the eight variables are: x1, x2, x3, x4, y1, y2, y3 and y4"))
+```
+
+Calculate the mean() and sample var() of each of the eight variables in the dataframe.
+```{r}
+attach(anscombe)
+mean_values <- sapply(anscombe,
+                     FUN = mean)
+
+variance_values <- sapply(anscombe,
+                          FUN = var)
+
+median_values <- sapply(anscombe, 
+                        FUN  = median)
+
+summary_abscombe <- matrix(data = c(mean_values, 
+                                    variance_values, 
+                                    median_values), 
+                  ncol = 8, 
+                  byrow = TRUE)
+colnames(summary_abscombe) <- c("x1", "x2", "x3", "x4", "y1", "y2", "y3", "y4")
+rownames(summary_abscombe) <- c("Mean", "Variance", "Median")
+summary_abscombe
+
+```
+
+Interpret your results from above. How similar do you think the eight datasets are purely on the basis of mean() and  var()?
+
+The x data sets have the same mean and variance, 
+The y data sets also have similar mean and variance.
+
+
+Create box plots for the eight data sets and interpret what you see. Perhaps calculate IQR() and skewness() for each set. Should you change your conclusions from above?
+```{r}
+boxplot(x1, 
+        horizontal = TRUE, 
+        col = rgb(1, 0, 0, 
+        alpha = 1/2))
+boxplot(x2, 
+        horizontal = TRUE, 
+        col = rgb(0.3, 0.3, 0.3, 
+        alpha = 1/2))
+boxplot(x3, 
+        horizontal = TRUE, 
+        col = rgb(0, 1, 0, 
+        alpha = 1/2))
+boxplot(x4, 
+        horizontal = TRUE, 
+        col = rgb(0, 0, 1, 
+        alpha = 1/2))
+
+```
+```{r}
+boxplot(y1, 
+        horizontal = TRUE, 
+        col = rgb(1, 0, 0, 
+        alpha = 1/2))
+boxplot(y2, 
+        horizontal = TRUE, 
+        col = rgb(0.3, 0.3, 0.3, 
+        alpha = 1/2))
+boxplot(y3, 
+        horizontal = TRUE, 
+        col = rgb(0, 1, 0, 
+        alpha = 1/2))
+boxplot(y4, 
+        horizontal = TRUE, 
+        col = rgb(0, 0, 1, 
+        alpha = 1/2))
+```
+
+Anscombe intended his eight sets to be interpreted as four sets of (x,y) data: (x1,y1), (x2,y2), (x3,y3) and (x4,y4). Plot y1-vs-x1, y2-vs-x2, y3-vs-x3 and y4-vs-x4 using the plot() function and comment on what you observe.
+```{r}
+plot(x1, y1, col = rgb(1, 0, 0, alpha = 1/2), 
+     xlim = c(0, 20),
+     ylim = c(0, 20),
+     xlab = "x1", 
+     ylab = "y1")
+plot(x2, y2, col = rgb(0, 1, 0, alpha = 1/2), 
+     xlim = c(0, 20),
+     ylim = c(0, 20),
+     xlab = "x2", 
+     ylab = "y2")
+plot(x3, y3, col = rgb(0, 0, 1, alpha = 1/2), 
+     xlim = c(0, 20),
+     ylim = c(0, 20),
+     xlab = "x3", 
+     ylab = "y3")
+plot(x4, y4, col = rgb(0.5, 0.5, 0.5, alpha = 1/2), 
+     xlim = c(0, 20),
+     ylim = c(0, 20),
+     xlab = "x4", 
+     ylab = "y4")
+```
+
+
+2.2 Extension - correlation
+Calculate the correlation coefficient for each (x,y) pair of variables using the cor() function. Interpret the results you obtain: in particular, given what we observed above, do you think we’re justified in saying that similar correlation coefficients indicate similar linear trends?
+
+```{r}
+correlation_x1_y1 <- cor(x1, y1)
+correlation_x2_y2 <- cor(x2, y2)
+correlation_x3_y3 <- cor(x3, y3)
+correlation_x4_y4 <- cor(x4, y4)
+print(paste("The correlation between x1 and y1 is:", correlation_x1_y1, 
+            "The correlation between x2 and y2 is:", correlation_x2_y2,
+            "The correlation between x3 and y3 is:", correlation_x3_y3,
+            "The correlation between x4 and y4 is:", correlation_x4_y4))
+```
+
+From the plot we can see a similar positive trend between the 4 sets of data. 
+We can say that there is strong correlation between all the data points which follows a similar linear trend
