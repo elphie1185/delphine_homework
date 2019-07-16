@@ -77,6 +77,25 @@ boxplot(y4,
         alpha = 1/2))
 ```
 
+Calculate IQR and skewness
+```{r}
+IQR_data <- sapply(anscombe, 
+                   FUN = IQR)
+IQR_data
+```
+
+```{r}
+library(e1071)
+sapply(anscombe, FUN = skewness)
+```
+
+    # <0.5    ->  fairly symmetrical x1, x2, x3, y1
+    # 0.5 - 1 ->  moderately skewed Y2, moderatly left skewed
+    # > 1     -> highly skewed x4, y3 and y4 highly right-skewed
+
+
+
+
 Anscombe intended his eight sets to be interpreted as four sets of (x,y) data: (x1,y1), (x2,y2), (x3,y3) and (x4,y4). Plot y1-vs-x1, y2-vs-x2, y3-vs-x3 and y4-vs-x4 using the plot() function and comment on what you observe.
 ```{r}
 plot(x1, y1, col = rgb(1, 0, 0, alpha = 1/2), 
