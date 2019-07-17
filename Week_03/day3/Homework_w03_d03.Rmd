@@ -1,0 +1,40 @@
+2.1 MVP
+Whilst you are listening to the podcast, ask yourself these questions:
+
+What is a weapon of maths destruction?
+     algorithm and models which are imported in society 
+     which are harmful and influence decisions
+     kind of algorithm which is important, secret and destructive
+     People don't know they exist and how they work 
+     They induce decisions which can have estructive effect on people's     lives
+     
+What kind of decisions could it be used for?
+     Getting a job/ a raise/a credit card/a loan/insurance
+     How we're policed, sentened to prison or given parole
+     Information - how you are fed information and the long term effects
+     
+    
+How are they making negative feedback loops?
+     Data Science influences/causes the future and decision`
+     Algorithms are funneling people in different classes of ethnicity,     mental health statuses... depending on their demographics. These algorithms might also "push" increase the exposure to material which some people might be more sensitive to and lead to more extremism. 
+     
+
+
+2.2 Extension
+Also ask yourself these questions:
+
+What do we mean by one variable being a proxy for another?
+        "Masked" question where the answer could indicate social status or ethnicity
+
+What level of understanding should a decision-maker have about a weapon of maths destruction before deciding to implement it?
+         understand regarding the level of harm the algorithms can cause in a similar manner to the amount of "deaths" caused by a car for example
+
+
+What sort of regulation could be put in place to increase “fairness”?
+        auditability - for whom does this algorithm fail
+        transparency
+        ethical metrics: how does the algorithm work beyond the script. Understand who the stakeholders are and involve them in the building of the algorithm. Measure the impact of the risk on the stakeholder. 
+        What should be monitored to make sure that things aren't going wrong.
+
+
+
