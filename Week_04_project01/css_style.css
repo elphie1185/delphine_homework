@@ -1,0 +1,87 @@
+title-slide {
+  color: white;
+  font-size: 60px;
+  font-family:"arial";
+  text-align: center;
+}
+
+
+body {
+  background: rgb(81, 89, 110);
+  color: white;
+  font-size: 18px;
+  font-family:"arial";
+  text-align: left;
+}
+
+slides > slide {
+  background: rgb(81, 89, 110);
+  color: white;
+}
+
+.title-slide hgroup h1, .title-slide hgroup p, h3 {
+  color: white;
+}
+
+a {
+  color: rgb(255,255,128);
+  font-weight: bold;
+}
+
+.green-text{
+  color:rgb(91, 230, 31);
+  font-weight: bold;
+}
+
+h1 {
+  color: white;
+  background-color: rgb(192, 192, 192);
+  background: transparent;
+  text-align: left;
+  font-size: 42px;
+  font-weight: bold;
+  font-family: "arial";
+}
+
+h2 {
+  color: rgb(179,255,255);
+  text-align: left;
+  font-size: 48px;
+  font-style: italic;
+  font-family: "arial";
+}
+
+h4 {
+  color: white;
+  text-align: left;
+  font-size: 17px;
+  font-style: italic;
+  font-family: "arial";
+}
+
+.lightbulb-img {
+  width: 10%;  
+  margin-right: 20px;
+}
+
+.sadlightbulb-img {
+  width: 10%;  
+  margin-right: 20px;
+}
+
+.image-link-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.image-link-wrapper p {
+  margin-bottom: 0;
+}
+
+.inout-img {
+  margin-right: 40px;
+}
+
+.image-text-to-right {
+  align-items: right; 
+}
