@@ -28,16 +28,6 @@ Make a line chart showing monthly revenue and costs over the last year. This dat
 
 
 ```{r}
-data <- cbind(x, y)
-ggplot(qb_monthly_sales) +
-  aes(x = subset(qb_monthly_sales$Amount, 
-                 qb_monthly_sales$Cashflow == "Total Revenue"),
-      y = subset(qb_monthly_sales$Amount, 
-                 qb_monthly_sales$Cashflow == "Cost")) +
-  geom_line()
-```
-
-```{r}
 separated_data <- subset(qb_monthly_sales, 
                  qb_monthly_sales$Cashflow == "Kwikbit Unit 1 Sales")
 cost <- subset(qb_monthly_sales, 
@@ -86,8 +76,8 @@ ggplot(separated_data) +
   geom_point(colour = "black") +
   labs(
     x = "Kwikbit Sales Amount",
-    y = "Total Ravenue",
-    title = "Progression of the total revenue depending on Kikbit sales"
+    y = "Total Revenue",
+    title = "Progression of the total revenue depending on Kwikbit sales"
   )
 ```
 
