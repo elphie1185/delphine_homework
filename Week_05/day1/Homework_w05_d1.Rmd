@@ -1,0 +1,93 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+Loadin the libraries
+```{r}
+library(CodeClanData)
+library(ggplot2)
+```
+
+Take the data in the dataset qb_revenue_breakdown and make a stacked bar chart showing the sources of revenue across the two years in the dataset.
+```{r}
+ggplot(qb_revenue_breakdown) +
+  aes(x = Year, y = Revenue, fill = Product) +
+  geom_bar(stat = "identity") 
+```
+
+
+
+Make a line chart showing monthly sales of the “flagship product” - the KwikBit Unit1 - over the last year. This data is inside qb_monthly_sales, but you will need to use subset.
+```{r}
+ggplot(subset(qb_monthly_sales, Cashflow == "Kwikbit Unit 1 Sales")) +
+  aes(x = Date, y = as.integer(Amount)) +
+  geom_line()
+```
+
+Make a line chart showing monthly revenue and costs over the last year. This data is also in  qb_monthly_sales.
+
+
+```{r}
+data <- cbind(x, y)
+ggplot(qb_monthly_sales) +
+  aes(x = subset(qb_monthly_sales$Amount, 
+                 qb_monthly_sales$Cashflow == "Total Revenue"),
+      y = subset(qb_monthly_sales$Amount, 
+                 qb_monthly_sales$Cashflow == "Cost")) +
+  geom_line()
+```
+
+```{r}
+separated_data <- subset(qb_monthly_sales, 
+                 qb_monthly_sales$Cashflow == "Kwikbit Unit 1 Sales")
+cost <- subset(qb_monthly_sales, 
+                 qb_monthly_sales$Cashflow == "Cost")
+revenue <- subset(qb_monthly_sales, 
+                 qb_monthly_sales$Cashflow == "Total Revenue")
+separated_data$cost <- cost$Amount
+separated_data$revenue <- revenue$Amount
+```
+
+```{r}
+ggplot(separated_data) +
+  aes(x = cost, y = revenue) +
+  geom_line(colour = "blue") +
+  geom_point(colour = "black")
+```
+
+
+4.2 Potential
+Personal fitness trackers are a growth industry. One company does not dominate the field. Show annual sales of personal fitness trackers over the last 5 years broken down by company as a ribbon plot (use geom_area). This data is in qb_competitors.
+
+
+```{r}
+ggplot(qb_competitors) +
+  aes(x = Year, y = Revenue, fill = Company) +
+  geom_area(alpha = 0.45)
+```
+
+Now show the sales from the 5 competitors as a line graph. Include an extra layer that shows the data points used to make the lines.
+
+```{r}
+ggplot(qb_competitors) +
+  aes(x = Year, y = Revenue, colour = Company) +
+  geom_line(alpha = 0.45) +
+  geom_point()
+```
+
+5 Extension
+Try out different ways of plotting these three datasets. Which graphs do you think are particularly effective at showing QikBit’s success?
+
+Plotting sales against revenue: 
+```{r}
+ggplot(separated_data) +
+  aes(x = Amount, y = revenue) +
+  geom_line(colour = "blue") +
+  geom_point(colour = "black") +
+  labs(
+    x = "Kwikbit Sales Amount",
+    y = "Total Ravenue",
+    title = "Progression of the total revenue depending on Kikbit sales"
+  )
+```
+
