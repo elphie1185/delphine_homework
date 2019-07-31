@@ -1,0 +1,113 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+upload libraries
+```{r}
+library(CodeClanData)
+library(ggplot2)
+```
+
+Take the data in the dataset qb_revenue_breakdown and make a stacked bar chart showing the sources of revenue across the two years in the dataset
+```{r}
+ggplot(qb_revenue_breakdown) +
+  aes(x = Year, y = Revenue/1000, fill = Product) +
+  geom_bar(stat = "identity") +
+  labs(x = "Year", 
+       y = "Revenue  in £", 
+       title = "Revenue for each Product per Year") +
+  scale_fill_grey(start = 0, end = 0.7) +
+  scale_y_continuous(labels = scales::comma_format(suffix = "K")) +
+  theme(
+    panel.background = element_rect(fill = "white"), 
+    axis.title = element_text(size = 10), 
+    plot.title = element_text(size = 16), 
+    legend.title = element_text(size = 12), 
+    legend.text = element_text(size = 12), 
+    panel.grid = element_line(colour = "grey25", size = 0.1),
+    panel.border = element_rect(colour = "grey25", size = 0.2, fill = NA)
+  )
+```
+
+Make a line chart showing monthly sales of the “flagship product” - the KwikBit Unit1 - over the last year.
+```{r}
+ggplot(subset(qb_monthly_sales, Cashflow == "Kwikbit Unit 1 Sales")) +
+  aes(x = Date, y = as.integer(Amount)) +
+  geom_line() +
+  labs(x = "Date", 
+       y = "Monthly Sales in £", 
+       title = "Sales progression") +
+  theme(
+    panel.background = element_rect(fill = "white"), 
+    panel.grid = element_line(colour = "grey25", size = 0.1),
+    panel.border = element_rect(colour = "grey25", size = 0.2, fill = NA),
+    axis.title = element_text(size = 10), 
+    plot.title = element_text(size = 16)
+    )
+```
+
+Make a line chart showing monthly revenue and costs over the last year.
+```{r}
+revenue_and_costs <- subset(qb_monthly_sales, Cashflow != "Kwikbit Unit 1 Sales")
+
+ggplot(revenue_and_costs) +
+  aes(x = Date, y = Amount, colour = Cashflow, group = Cashflow) +
+  geom_line() +
+  scale_colour_manual(values = c("Cost" = "grey1", 
+                                 "Total Revenue" = "grey80")) +
+  labs(x = "Date", 
+       y = "Cost / Revenue in £", 
+       title = "Cost and Revenue progression") +
+  theme(
+    panel.background = element_rect(fill = "white"), 
+    panel.grid = element_line(colour = "grey25", size = 0.1),
+    panel.border = element_rect(colour = "grey25", size = 0.2, fill = NA),
+    axis.title = element_text(size = 10), 
+    plot.title = element_text(size = 16), 
+    legend.title = element_text(size = 12), 
+    legend.text = element_text(size = 12)
+    )
+```
+
+Show annual sales of personal fitness trackers over the last 5 years broken down by company as a ribbon plot (use  geom_area). This data is in qb_competitors.
+```{r}
+ggplot(qb_competitors) +
+  aes(x = Year, y = Revenue/1000, fill = Company) +
+  geom_area() +
+  scale_fill_grey(start = 0, end = 0.7) +
+  scale_y_continuous(labels = scales::comma_format(suffix = "K")) +
+  labs(x = "Year", 
+       y = "Competitor's revenue", 
+       title = "Revenue progression for competitors") +
+  theme(
+    panel.background = element_rect(fill = "white"), 
+    panel.grid = element_line(colour = "grey25", size = 0.1),
+    panel.border = element_rect(colour = "grey25", size = 0.2, fill = NA),
+    axis.title = element_text(size = 10), 
+    plot.title = element_text(size = 16), 
+    legend.title = element_text(size = 12), 
+    legend.text = element_text(size = 12)
+    )
+```
+Now show the sales from the 5 competitors as a line graph. Include an extra layer that shows the data points used to make the lines
+```{r}
+ggplot(qb_competitors) +
+  aes(x = Year, y = Revenue/1000, colour = Company) +
+  geom_line() +
+  geom_point() +
+  scale_colour_grey(start = 0, end = 0.7) +
+  scale_y_continuous(labels = scales::comma_format(suffix = "K")) +
+  labs(x = "Year", 
+       y = "Competitor's revenue", 
+       title = "Revenue progression for competitors") +
+  theme(
+    panel.background = element_rect(fill = "white"), 
+    panel.grid = element_line(colour = "grey25", size = 0.1),
+    panel.border = element_rect(colour = "grey25", size = 0.2, fill = NA),
+    axis.title = element_text(size = 10), 
+    plot.title = element_text(size = 16), 
+    legend.title = element_text(size = 12), 
+    legend.text = element_text(size = 12)
+    )
+```
+
