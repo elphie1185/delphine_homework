@@ -73,9 +73,12 @@ What is the probability of Gianna and Danesh both being seen today?
 Gianna_and_Danesh <- c(4, 7)
 
 both_seen_today <- subset(sample_space_appointment,
-                          isin(sample_space_appointment, Gianna_and_Danesh) ==                           TRUE)
+                          isin(sample_space_appointment,
+                               Gianna_and_Danesh) == TRUE)
 
 nrow(both_seen_today)
+p_both_seen <- nrow(both_seen_today)/nrow(sample_space_appointment)
+p_both_seen
 ```
 
 
@@ -86,6 +89,8 @@ G_before_D <- subset(sample_space_appointment,
                                Gianna_and_Danesh, 
                                ordered = TRUE) == TRUE)
 nrow(G_before_D)
+p_G_before_D <- nrow(G_before_D)/nrow(sample_space_appointment)
+p_G_before_D
 ```
 
 Carmen and Henry have now been triaged as high priority and will be seen in the first two available slots, although their order hasn’t yet been determined. In how many different orders can the patients now be seen?
@@ -94,19 +99,24 @@ C_and_H_first <- permutations(n = 2, r = 2, repeats.allowed = FALSE)
 nrow(C_and_H_first)
 everyone_else <- permutations(n = 6, r = 3, repeats.allowed = FALSE)
 nrow(everyone_else)
-total_combination_C_and_H_first <- 240
+total_combination_C_and_H_first <- nrow(C_and_H_first) * nrow(everyone_else)
+total_combination_C_and_H_first
 ```
 
 8. If order is not significant, how many ways are there to select a 5 student quiz team from a group of 8 students?
 ```{r}
-number_of_quiz <- nrow(combinations(n = 8, r = 5, repeats.allowed = FALSE))
+number_of_quiz <- nrow(combinations(n = 8, 
+                                    r = 5, 
+                                    repeats.allowed = FALSE))
 number_of_quiz
 ```
 
 9. (harder) How would your answer above change if a team captain had to be selected for each team?
 ```{r}
 possible_captain <- 8
-rest_of_team <- nrow(combinations(n = 7, r = 4, repeats.allowed = FALSE))
+rest_of_team <- nrow(combinations(n = 7, 
+                                  r = 4, 
+                                  repeats.allowed = FALSE))
 number_team_with_captain <- 8 * rest_of_team
 number_team_with_captain
 ```

@@ -1,2 +1,0 @@
-"0","dbGetQuery(conn = my_db_connection, "
-"0","           statement = ""SELECT * FROM wrestlers WHERE born = 'United Kingdom'"")"

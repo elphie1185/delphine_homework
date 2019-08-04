@@ -72,12 +72,13 @@ Plotting sales against revenue:
 ```{r}
 ggplot(separated_data) +
   aes(x = Amount, y = revenue) +
-  geom_line(colour = "blue") +
+  geom_path(colour = "blue") +
   geom_point(colour = "black") +
   labs(
     x = "Kwikbit Sales Amount",
     y = "Total Revenue",
     title = "Progression of the total revenue depending on Kwikbit sales"
   )
+ggsave("Revenue_against_sales_plot.pdf")
 ```
 

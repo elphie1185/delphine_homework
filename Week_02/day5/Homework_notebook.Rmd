@@ -82,7 +82,7 @@ response_unpacker <- function(response_list){
 
 ```{r}
 emotion_list <- list()
-indico_api <- api_key_second_api
+indico_api <- api_key_indico
 indico_url <- "https://apiv2.indico.io/emotion"
 for (i in 1:nrow(employees_with_feedbacks)){
   feedback <- employees_with_feedbacks$message[i]

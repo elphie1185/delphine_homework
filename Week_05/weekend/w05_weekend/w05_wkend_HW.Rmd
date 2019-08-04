@@ -1,0 +1,448 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+Libraries
+```{r}
+library(ggplot2)
+library(readxl)
+```
+
+Extracting the data from each sheet into a list:
+```{r}
+sheet_name <- excel_sheets("green_bindle_consulting.xlsx")
+```
+
+```{r}
+consulting_data <- list()
+i = 1
+for(sheet in sheet_name) {
+  consulting_data[[i]] <- data.frame(read_excel("green_bindle_consulting.xlsx", 
+                                     sheet = sheet))
+  i = i + 1
+}
+```
+
+Converting each list into a data frame 
+- there must be a simpler way to do this - :
+```{r}
+data_1 <- consulting_data[[1]]
+data_2 <- consulting_data[[2]]
+data_3 <- consulting_data[[3]]
+data_4 <- consulting_data[[4]]
+data_5 <- consulting_data[[5]]
+data_6 <- consulting_data[[6]]
+data_7 <- consulting_data[[7]]
+data_8 <- consulting_data[[8]]
+```
+
+Data 1:
+```{r}
+data_1$is_asset <- data_1$Item == "Assets"
+
+ggplot(data_1) +
+  geom_col(aes(x = Year, y = Value, fill = is_asset), 
+           data = subset(data_1, data_1$Item != "Balance"),
+           position = "dodge") +
+  geom_line(aes(x = Year, y = Value), 
+           data = subset(data_1, data_1$Item == "Balance"), 
+           colour = "black") +
+  geom_point(aes(x = Year, y = Value), 
+           data = subset(data_1, data_1$Item == "Balance"), 
+           colour = "black", 
+           shape = 18, 
+            size = 4) +
+  scale_fill_manual(values = c("FALSE" = "red", "TRUE" = "green"), 
+                    labels = c("FALSE" = "Liabilities", 
+                              "TRUE" = "Assets"), 
+                    name = NULL) +
+  labs(
+    x = "Year", 
+    y = "Item Value", 
+    title = "Item Value per Year", 
+    caption = "Balance in black") +
+  scale_x_continuous(breaks = seq(2012, 2018, 3)) +
+  theme(
+    panel.background = element_rect(fill = "white"), 
+    panel.grid.major = element_line(colour = "grey44"), 
+    panel.grid.minor = element_line(colour = "grey84"), 
+    panel.border = element_rect(fill = NA, colour = "grey44"),
+    title = element_text(face = "bold", size = 12), 
+    axis.title = element_text(face = "bold", size = 8), 
+    legend.position = "bottom"
+  )
+```
+
+```{r}
+ggplot(data_1) +
+  aes(x = Year, y = Value, colour = Item) +
+  geom_line(size = 1) +
+  geom_point(shape = 18, 
+            size = 4, 
+            show.legend = FALSE) +
+  scale_colour_brewer(palette = "Set2") +
+  labs(
+    x = "Year", 
+    y = "Item Value", 
+    title = "Item Value per Year", 
+    caption = "Balance in black") +
+  scale_x_continuous(breaks = seq(2012, 2018, 3)) +
+  theme(
+    panel.background = element_rect(fill = "white"), 
+    panel.grid.major = element_line(colour = "grey44"), 
+    panel.grid.minor = element_line(colour = "grey84"), 
+    panel.border = element_rect(fill = NA, colour = "grey44"),
+    title = element_text(face = "bold", size = 12), 
+    axis.title = element_text(face = "bold", size = 8), 
+    legend.position = "bottom"
+  )
+```
+
+Data2
+```{r}
+ggplot(data_2) +
+  geom_col(aes(x = Year, y = Value, fill = Status), 
+           data = subset(data_2, 
+                         data_2$Status != "Tot"),
+           position = "dodge") +
+  geom_line(aes(x = Year, y = Value), 
+            data = subset(data_2, 
+                          data_2$Status == "Tot")) +
+  geom_point(aes(x = Year, y = Value), 
+            data = subset(data_2, 
+                          data_2$Status == "Tot"), 
+            shape = 18, 
+            size = 4) +
+  labs(
+    x = "\nYear", 
+    y = "Item Value\n", 
+    title = "Item Values per Year\n and Total progression"
+    ) +
+  scale_x_continuous(breaks = seq(2012, 2018, 3)) +
+  scale_fill_brewer(palette = "Set2") +
+  theme(
+    panel.background = element_rect(fill = "white"), 
+    panel.grid.major = element_line(colour = "grey44"), 
+    panel.grid.minor = element_line(colour = "grey84"), 
+    panel.border = element_rect(fill = NA, colour = "grey44"),
+    title = element_text(face = "bold", size = 12), 
+    axis.title = element_text(face = "bold", size = 8), 
+    legend.position = "bottom"
+  )
+```
+
+```{r}
+ggplot(data_2) +
+  aes(x = Year, y = Value, colour = Status) +
+  geom_line(size = 1) +
+  geom_point(shape = 18, 
+            size = 4, 
+            show.legend = FALSE) +
+  scale_colour_brewer(palette = "Set2") +
+  labs(
+    x = "Year", 
+    y = "Item Value", 
+    title = "Item Value per Year") +
+  scale_x_continuous(breaks = seq(2012, 2018, 3)) +
+  theme(
+    panel.background = element_rect(fill = "white"), 
+    panel.grid.major = element_line(colour = "grey44"), 
+    panel.grid.minor = element_line(colour = "grey84"), 
+    panel.border = element_rect(fill = NA, colour = "grey44"),
+    title = element_text(face = "bold", size = 12), 
+    axis.title = element_text(face = "bold", size = 8), 
+    legend.position = "bottom"
+  )
+```
+
+
+Data 3
+```{r}
+data_3$is_pos <- data_3$Value >= 0
+data_3 <- data_3[order(data_3$Value), ]
+
+ggplot(data_3) +
+  aes(x = Item, 
+      y = Value, 
+      fill = is_pos) +
+  geom_bar(sta = "identity") +
+  scale_fill_manual(values = c("TRUE" = "green", 
+                               "FALSE" = "red"), 
+                    labels = c("FALSE" = "Liabilities", 
+                              "TRUE" = "Assets"), 
+                    name = NULL) +
+  coord_flip()+
+  labs(
+    x = "\nValue", 
+    y = "Item\n", 
+    title = "Value per Item"
+  ) +
+  theme(
+    panel.background = element_rect(fill = "white"), 
+    panel.grid.major = element_line(colour = "grey44"), 
+    panel.grid.minor = element_line(colour = "grey84"), 
+    panel.border = element_rect(fill = NA, colour = "grey44"),
+    title = element_text(face = "bold", size = 12), 
+    axis.title = element_text(face = "bold", size = 8), 
+    legend.position = "bottom"
+  )
+```
+
+Data 4
+```{r}
+ggplot(data_4) +
+  aes(x = Region, 
+      y = Allocation, 
+      colour = Asset_Class) +
+  geom_point(size = 2) +
+  facet_grid(Purpose~Date) +
+  scale_colour_brewer(palette = "Set2") +
+  scale_y_continuous(breaks = seq(0, 0.25, 0.075)) +
+  labs(
+    x = "\nRegion", 
+    y = "Value Allocation\n", 
+    title = "Value Allocation per Asset Class", 
+    colour = "Asset Class"
+    ) +
+  theme(
+    panel.background = element_rect(fill = "white"), 
+    panel.grid.major = element_line(colour = "grey44"), 
+    panel.grid.minor = element_line(colour = "grey84"), 
+    panel.border = element_rect(fill = NA, colour = "grey44"),
+    title = element_text(face = "bold", size = 12), 
+    axis.title = element_text(face = "bold", size = 8), 
+    strip.background = element_rect(fill = "brown4", colour = "brown1"), 
+    strip.text = element_text(size = 8, face = "bold", colour = "white")
+  )
+```
+
+```{r}
+ggplot(data_4) +
+  aes(x = Date, 
+      y = Allocation, 
+      colour = Asset_Class, 
+      shape = Purpose) +
+  geom_point(size = 2) +
+  facet_grid(~Region) +
+  scale_colour_brewer(palette = "Set2") +
+  scale_y_continuous(breaks = seq(0, 0.25, 0.075)) +
+  labs(
+    x = "\nYear", 
+    y = "Value Allocation\n", 
+    title = "Value Allocation per Region", 
+    colour = "Asset Class"
+    ) +
+  theme(
+    panel.background = element_rect(fill = "white"), 
+    panel.grid.major = element_line(colour = "grey44"), 
+    panel.grid.minor = element_line(colour = "grey84"), 
+    panel.border = element_rect(fill = NA, colour = "grey44"),
+    title = element_text(face = "bold", size = 12), 
+    axis.title = element_text(face = "bold", size = 8), 
+    strip.background = element_rect(fill = "brown4", colour = "brown1"), 
+    strip.text = element_text(size = 8, face = "bold", colour = "white")
+  )
+```
+
+
+Data 5
+```{r}
+data_5$is_asset <- data_5$Item == "Assets"
+
+ggplot(data_5) +
+  geom_col(aes(x = Basis, y = TPs, fill = is_asset), 
+           data = subset(data_5, data_5$Item != "Balance"),
+           position = "dodge") +
+  geom_point(aes(x = Basis, y = TPs), 
+           data = subset(data_5, data_5$Item == "Balance"), 
+           colour = "black", 
+           shape = 18, 
+            size = 4) +
+  scale_fill_manual(values = c("FALSE" = "red", "TRUE" = "green"), 
+                    labels = c("FALSE" = "Liabilities", 
+                              "TRUE" = "Assets"), 
+                    name = NULL) +
+  labs(
+    x = "Type of Account", 
+    y = "Account Value", 
+    title = "Item Value per Type of Account", 
+    caption = "Total Balance in black") +
+  theme(
+    panel.background = element_rect(fill = "white"), 
+    panel.grid.major = element_line(colour = "grey44"), 
+    panel.grid.minor = element_line(colour = "grey84"), 
+    panel.border = element_rect(fill = NA, colour = "grey44"),
+    title = element_text(face = "bold", size = 12), 
+    axis.title = element_text(face = "bold", size = 8), 
+    legend.position = "bottom", 
+    plot.caption = element_text(face = "italic", size = 8)
+  )
+```
+
+
+Data 6
+```{r}
+ggplot(data_6) +
+  aes(x = Scenario, 
+      y = Balance, 
+      colour = Balance) +
+  geom_point() +
+  labs(
+    x = "Scenario number", 
+    y = "Balance", 
+    title = "Balance per Scenario Type") +
+  scale_colour_gradient2(low = "red",
+                         mid = "white",
+                        high = "blue") +
+  theme(
+    panel.background = element_rect(fill = "thistle4"), 
+    panel.grid.major = element_line(colour = "grey44"), 
+    panel.grid.minor = element_line(colour = "grey84"), 
+    panel.border = element_rect(fill = NA, colour = "grey44"),
+    title = element_text(face = "bold", size = 12), 
+    axis.title = element_text(face = "bold", size = 8), 
+    legend.position = "bottom"
+  )
+```
+
+```{r}
+ggplot(data_6) +
+  aes(x = Scenario, 
+      y = Balance, 
+      fill = Balance) +
+  geom_bar(stat = "identity") +
+  labs(
+    x = "Scenario number", 
+    y = "Balance", 
+    title = "Balance per Scenario Type") +
+  scale_fill_gradient2(low = "red",
+                         mid = "white",
+                        high = "blue") +
+  scale_x_continuous(breaks = seq(0, 100, 10)) +
+  scale_y_continuous(breaks = seq(-2, 2, 0.5)) +
+  theme(
+    panel.background = element_rect(fill = "thistle4"), 
+    panel.grid.major = element_line(colour = "grey44"), 
+    panel.grid.minor = element_line(colour = "grey84"), 
+    panel.border = element_rect(fill = NA, colour = "grey44"),
+    title = element_text(face = "bold", size = 12), 
+    axis.title = element_text(face = "bold", size = 8), 
+    legend.position = "bottom"
+  )
+```
+
+
+
+Data 7
+```{r}
+ggplot(data_7) +
+  aes(x = Year, 
+      y = Cashflow, 
+      colour = Status) +
+  geom_point() +
+  facet_wrap(~Status) +
+  scale_colour_brewer(palette = "Set2") +
+  labs(
+    x = "Year", 
+    y = "Cashflow Level", 
+    title = "Cashflow Per Activity Status") +
+  theme(
+    panel.background = element_rect(fill = "white"), 
+    panel.grid.major = element_line(colour = "grey44"), 
+    panel.grid.minor = element_line(colour = "grey84"), 
+    panel.border = element_rect(fill = NA, colour = "grey44"),
+    title = element_text(face = "bold", size = 12), 
+    axis.title = element_text(face = "bold", size = 8), 
+    legend.position = "bottom", 
+    strip.background = element_rect(fill = "brown4", colour = "brown1"), 
+    strip.text = element_text(size = 8, face = "bold", colour = "white")
+  )
+```
+
+```{r}
+ggplot(data_7) +
+  aes(x = Year, 
+      y = Cashflow, 
+      fill = Status) +
+  geom_bar(stat = "identity") +
+  scale_fill_brewer(palette = "Set2") +
+  labs(
+    x = "Year", 
+    y = "Cashflow Level", 
+    title = "Cashflow Per Activity Status") +
+  theme(
+    panel.background = element_rect(fill = "white"), 
+    panel.grid.major = element_line(colour = "grey44"), 
+    panel.grid.minor = element_line(colour = "grey84"), 
+    panel.border = element_rect(fill = NA, colour = "grey44"),
+    title = element_text(face = "bold", size = 12), 
+    axis.title = element_text(face = "bold", size = 8), 
+    legend.position = "bottom"
+  )
+```
+
+
+Data 8 
+```{r}
+library(ggwordcloud)
+ggplot(data_8) +
+  aes(label = Word, 
+      size = Size, 
+      colour = Word) +
+  geom_text_wordcloud(shape = "star", 
+                      colour = "#1d91c0", 
+                      grid_size = 2) +
+  labs(
+    title = "Words by Size"
+  ) +
+  theme(
+    panel.background = element_rect(fill = "white"), 
+    panel.border = element_rect(fill = NA, colour = "grey44"),
+    title = element_text(face = "bold", size = 12)
+  )
+```
+
+```{r}
+ggplot(data_8) +
+  aes(x = Word, y = Size) +
+  geom_segment(aes(x = Word, xend = Word, y = 0, yend = Size), 
+               linetype = "dotted", ) +
+  geom_point(
+    size = 2,
+    stroke = 2,
+    colour = "#1d91c0"
+  ) +
+  coord_flip() +
+  labs(
+    title = "Words by Size"
+  ) +
+  theme(
+    panel.background = element_rect(fill = "white"), 
+    panel.border = element_rect(fill = NA, colour = "grey44"),
+    title = element_text(face = "bold", size = 12)
+  )
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
