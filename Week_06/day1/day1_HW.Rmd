@@ -30,12 +30,15 @@ summarise(drinks_content, mean(Calories), var(Calories))
 ```{r}
 ggplot(drinks_content) +
   aes(x = Calories) +
-  geom_histogram(binwidth = 40, fill = "blue") +
+  geom_histogram(binwidth = 40, fill = "navajowhite2", colour = "navajowhite4") +
+  scale_x_continuous(breaks = seq(0, 500, 50)) +
   labs(
     x = "\nNumber of Calories", 
     y = "Frequency of Occurence\n", 
     title = "Distribution of the Calories\nin Starbucks Coffee"
-  ) 
+  ) +
+  theme_dark()
+  
 ```
 
 3. Check if you have any outliers in the Calories variable by creating a boxplot. Then get the actual values of any outliers you have. Finally remove the outliers and save the new tibble as drinks_content_nooutlier
@@ -125,7 +128,7 @@ drinks_ranked <- drinks %>%
 Using the drinks_grouped data, apply the cume_dist function to get the top 25% of Calorie drinks within each group. Save this in a new tibble called  drinks_distribution.
 ```{r}
 drinks_distribution <- drinks_grouped %>%
-  arrange(desc(Calories)) %>%
+  arrange(Calories) %>%
   mutate(cumul_dist = cume_dist(Calories)) %>%
   filter(cumul_dist > 0.25)
 
