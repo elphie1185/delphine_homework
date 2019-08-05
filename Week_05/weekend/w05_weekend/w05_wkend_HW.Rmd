@@ -18,24 +18,15 @@ sheet_name <- excel_sheets("green_bindle_consulting.xlsx")
 consulting_data <- list()
 i = 1
 for(sheet in sheet_name) {
-  consulting_data[[i]] <- data.frame(read_excel("green_bindle_consulting.xlsx", 
+  consulting_data[[sheet]] <- data.frame(read_excel("green_bindle_consulting.xlsx", 
                                      sheet = sheet))
   i = i + 1
 }
+
+list2env(consulting_data, globalenv())
 ```
 
-Converting each list into a data frame 
-- there must be a simpler way to do this - :
-```{r}
-data_1 <- consulting_data[[1]]
-data_2 <- consulting_data[[2]]
-data_3 <- consulting_data[[3]]
-data_4 <- consulting_data[[4]]
-data_5 <- consulting_data[[5]]
-data_6 <- consulting_data[[6]]
-data_7 <- consulting_data[[7]]
-data_8 <- consulting_data[[8]]
-```
+assign(paste0("data_", i), consulting_data[[i]])
 
 Data 1:
 ```{r}
