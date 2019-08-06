@@ -30,17 +30,17 @@ assign(paste0("data_", i), consulting_data[[i]])
 
 Data 1:
 ```{r}
-data_1$is_asset <- data_1$Item == "Assets"
+Data1$is_asset <- Data1$Item == "Assets"
 
-ggplot(data_1) +
+ggplot(Data1) +
   geom_col(aes(x = Year, y = Value, fill = is_asset), 
-           data = subset(data_1, data_1$Item != "Balance"),
+           data = subset(Data1, Data1$Item != "Balance"),
            position = "dodge") +
   geom_line(aes(x = Year, y = Value), 
-           data = subset(data_1, data_1$Item == "Balance"), 
+           data = subset(Data1, Data1$Item == "Balance"), 
            colour = "black") +
   geom_point(aes(x = Year, y = Value), 
-           data = subset(data_1, data_1$Item == "Balance"), 
+           data = subset(Data1, Data1$Item == "Balance"), 
            colour = "black", 
            shape = 18, 
             size = 4) +
@@ -67,7 +67,7 @@ ggplot(data_1) +
 ```
 
 ```{r}
-ggplot(data_1) +
+ggplot(Data1) +
   aes(x = Year, y = Value, colour = Item) +
   geom_line(size = 1) +
   geom_point(shape = 18, 
@@ -92,17 +92,17 @@ ggplot(data_1) +
 
 Data2
 ```{r}
-ggplot(data_2) +
+ggplot(Data2) +
   geom_col(aes(x = Year, y = Value, fill = Status), 
-           data = subset(data_2, 
-                         data_2$Status != "Tot"),
+           data = subset(Data2, 
+                         Data2$Status != "Tot"),
            position = "dodge") +
   geom_line(aes(x = Year, y = Value), 
-            data = subset(data_2, 
-                          data_2$Status == "Tot")) +
+            data = subset(Data2, 
+                          Data2$Status == "Tot")) +
   geom_point(aes(x = Year, y = Value), 
-            data = subset(data_2, 
-                          data_2$Status == "Tot"), 
+            data = subset(Data2, 
+                          Data2$Status == "Tot"), 
             shape = 18, 
             size = 4) +
   labs(
@@ -124,7 +124,7 @@ ggplot(data_2) +
 ```
 
 ```{r}
-ggplot(data_2) +
+ggplot(Data2) +
   aes(x = Year, y = Value, colour = Status) +
   geom_line(size = 1) +
   geom_point(shape = 18, 
@@ -150,10 +150,10 @@ ggplot(data_2) +
 
 Data 3
 ```{r}
-data_3$is_pos <- data_3$Value >= 0
-data_3 <- data_3[order(data_3$Value), ]
+Data3$is_pos <- Data3$Value >= 0
+Data3 <- Data3[order(Data3$Value), ]
 
-ggplot(data_3) +
+ggplot(Data3) +
   aes(x = Item, 
       y = Value, 
       fill = is_pos) +
@@ -182,7 +182,7 @@ ggplot(data_3) +
 
 Data 4
 ```{r}
-ggplot(data_4) +
+ggplot(Data4) +
   aes(x = Region, 
       y = Allocation, 
       colour = Asset_Class) +
@@ -209,7 +209,7 @@ ggplot(data_4) +
 ```
 
 ```{r}
-ggplot(data_4) +
+ggplot(Data4) +
   aes(x = Date, 
       y = Allocation, 
       colour = Asset_Class, 
@@ -239,14 +239,14 @@ ggplot(data_4) +
 
 Data 5
 ```{r}
-data_5$is_asset <- data_5$Item == "Assets"
+Data5$is_asset <- Data5$Item == "Assets"
 
-ggplot(data_5) +
+ggplot(Data5) +
   geom_col(aes(x = Basis, y = TPs, fill = is_asset), 
-           data = subset(data_5, data_5$Item != "Balance"),
+           data = subset(Data5, Data5$Item != "Balance"),
            position = "dodge") +
   geom_point(aes(x = Basis, y = TPs), 
-           data = subset(data_5, data_5$Item == "Balance"), 
+           data = subset(Data5, Data5$Item == "Balance"), 
            colour = "black", 
            shape = 18, 
             size = 4) +
@@ -274,7 +274,7 @@ ggplot(data_5) +
 
 Data 6
 ```{r}
-ggplot(data_6) +
+ggplot(Data6) +
   aes(x = Scenario, 
       y = Balance, 
       colour = Balance) +
@@ -298,7 +298,7 @@ ggplot(data_6) +
 ```
 
 ```{r}
-ggplot(data_6) +
+ggplot(Data6) +
   aes(x = Scenario, 
       y = Balance, 
       fill = Balance) +
@@ -327,7 +327,7 @@ ggplot(data_6) +
 
 Data 7
 ```{r}
-ggplot(data_7) +
+ggplot(Data7) +
   aes(x = Year, 
       y = Cashflow, 
       colour = Status) +
@@ -352,7 +352,7 @@ ggplot(data_7) +
 ```
 
 ```{r}
-ggplot(data_7) +
+ggplot(Data7) +
   aes(x = Year, 
       y = Cashflow, 
       fill = Status) +
@@ -377,7 +377,7 @@ ggplot(data_7) +
 Data 8 
 ```{r}
 library(ggwordcloud)
-ggplot(data_8) +
+ggplot(Data8) +
   aes(label = Word, 
       size = Size, 
       colour = Word) +
@@ -395,7 +395,7 @@ ggplot(data_8) +
 ```
 
 ```{r}
-ggplot(data_8) +
+ggplot(Data8) +
   aes(x = Word, y = Size) +
   geom_segment(aes(x = Word, xend = Word, y = 0, yend = Size), 
                linetype = "dotted", ) +

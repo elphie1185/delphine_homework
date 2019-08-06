@@ -1,0 +1,169 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(dplyr)
+library(dbplyr)
+library(lubridate)
+
+date1 <- ymd_hms("2017-04-22 22:01:18")
+date2 <- ymd_hms("2001-11-07 10:09:56")
+
+mammals <- DBI::dbConnect(RSQLite::SQLite(), "~/de1_classnotes/week_06/day_2/5_homework/mammals.sqlite")
+
+plots <- tbl(mammals, sql("SELECT * FROM plots"))
+species <- tbl(mammals, sql("SELECT * FROM species"))
+surveys <- tbl(mammals, sql("SELECT * FROM surveys"))
+```
+
+1. Extract the different components (year, month, mday, yday, wday) from the variable date1. Add the labels to the month and do not abbreviate the month labels.
+```{r}
+year(date1)
+month(date1, label = TRUE, abbr = FALSE)
+mday(date1)
+yday(date1)
+wday(date1)
+```
+
+2. Add 14 days to your date1 variable and store it in a variable called next_fortnight. Take away 10 years from your  date2 variable, and store it in previous_decade.
+```{r}
+next_fortnight <- date1 + days(14)
+as_date(next_fortnight)
+
+previous_decade <- date2 - years(10)
+as_date(previous_decade)
+```
+
+3. Create a variable called this_year which contains today’s date. Then create an interval object which uses this_year and the previous_decade variable you made above. Store it in interval_years.
+```{r}
+this_year <- today()
+interval_years <- interval(this_year, previous_decade)
+interval_years
+```
+
+4. Change the time zone of both your date variables to “America/New_York”, and call them nyc_date1 and nyc_date2.
+```{r}
+nyc_date1 <- with_tz(date1, tz = "America/New_York")
+nyc_date2 <- with_tz(date2, tz = "America/New_York")
+```
+
+5. Create a tibble called survey_tibble. Use the make_datetime function to create a new column within that tibble called  full_date. (Hint: remember you can use the mutate function from yesterday to add new variables)
+```{r}
+survey_tibble <- surveys %>%
+  collect() %>%
+  mutate(full_date = make_datetime(year, month, day))
+```
+
+6. Check what type the new full_date variable is
+```{r}
+class(survey_tibble$full_date)
+```
+
+7. Convert the sex variable within survey_tibble to a logical variable. Save it in surveyor_sex
+```{r}
+survey_tibble %>%
+  mutate(surveyor_sex = (sex == "F"))
+```
+
+8. Using the dbplyr package, join the species and surveys table, so that only those species who were surveyed are kept. Save it in a new tibble called all_species.
+```{r}
+all_species <- surveys %>%
+  inner_join(species, by = "species_id")
+```
+
+
+9. Using the dpblyr package, implement a query (in R) that joins the species and survey tables together, and that returns the number of birds observed in each plot, each year. Hint : alongside the join functions, you can use some of the dplyr verbs we learnt about earlier in the week to filter, group, and count the data.
+```{r}
+species %>%
+  inner_join(surveys, by = "species_id") %>%
+  filter(taxa == "Bird") %>%
+  group_by(plot_id, year) %>%
+  summarise(n())
+```
+
+10. What would the equivalent query be in SQL?
+
+dbGetQuery(db_connect,
+           "SELECT species.*, surveys.*
+           FROM species INNER JOIN surveys
+           ON species.species_id = surveys.species_id, 
+           WHERE species.taxa == "Bird", 
+           GROUP BY surveys.plot_id, 
+           GROUP BY surveys.year")
+
+3.2 Extension
+For the extension task, we will use the nycflights13 package data . This dataset contains all 336776 flights that departed from New York City in 2013. The data comes from the US Bureau of Transportation Statistics, and is documented in ?nycflights13. It contains 5 related tables: 
+* airlines : airline names * airports : airport metadata * flights : flight time data for NYC departing flights * planes : plane metadata * weather : hourly weather data
+
+```{r}
+library(nycflights13)
+```
+
+
+Make a date-time column called departure_date from the year, month, day, hour, and minute variables in the  flights tibble.
+```{r}
+flights %>%
+  mutate(date_time = make_datetime(year, month, day))
+```
+
+
+Add the weather to the flights data by city of origin.
+
+
+```{r}
+#flights %>%
+  # inner_join(weather, by = "origin")
+```
+
+
+Add the location of the origin and destination (i.e. the lat and lon) to flights. Only keep those that have a location.
+```{r}
+airports %>%
+  select(faa, lat, lon) %>%
+  collect() %>%
+  inner_join(flights, by = c("faa" = "dest"), copy = TRUE)
+```
+
+
+
+Write a query which shows the mean delay of flights for each tailnumber and airline carrier, where the arrival delay was greater than 100 minutes.
+```{r}
+flights %>%
+  filter(arr_delay > 100) %>%
+  group_by(tailnum, carrier) %>%
+  summarise(mean(arr_delay))
+```
+
+Find the 10 most popular destinations to fly to, and then perform a join to find which flight went with those top 10 destinations.
+filter rank deac  <=10
+
+  
+```{r}
+flights %>%
+  group_by(dest) %>%
+  summarise(count = n()) %>%
+  mutate(dest_rank = min_rank(desc(count))) %>%
+  filter(dest_rank <= 10)
+```
+
+
+       
+       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

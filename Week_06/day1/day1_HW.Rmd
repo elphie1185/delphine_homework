@@ -130,8 +130,7 @@ Using the drinks_grouped data, apply the cume_dist function to get the top 25% o
 drinks_distribution <- drinks_grouped %>%
   arrange(Calories) %>%
   mutate(cumul_dist = cume_dist(Calories)) %>%
-  filter(cumul_dist > 0.25)
-
+  filter(cumul_dist < 0.25)
 ```
 
 
