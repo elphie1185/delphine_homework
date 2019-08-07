@@ -111,11 +111,7 @@ flights %>%
 
 Add the weather to the flights data by city of origin.
 
-
-```{r}
-#flights %>%
-  # inner_join(weather, by = "origin")
-```
+weather_join <- left_join(flights, weather, by = c("origin", "time_hour"))
 
 
 Add the location of the origin and destination (i.e. the lat and lon) to flights. Only keep those that have a location.
@@ -123,7 +119,8 @@ Add the location of the origin and destination (i.e. the lat and lon) to flights
 airports %>%
   select(faa, lat, lon) %>%
   collect() %>%
-  inner_join(flights, by = c("faa" = "dest"), copy = TRUE)
+  inner_join(flights, by = c("faa" = "dest"), copy = TRUE) %>%
+  inner_join(flights, by = c("faa" = "origin"))
 ```
 
 
@@ -133,7 +130,7 @@ Write a query which shows the mean delay of flights for each tailnumber and airl
 flights %>%
   filter(arr_delay > 100) %>%
   group_by(tailnum, carrier) %>%
-  summarise(mean(arr_delay))
+  summarise(mean_delay = mean(arr_delay))
 ```
 
 Find the 10 most popular destinations to fly to, and then perform a join to find which flight went with those top 10 destinations.
