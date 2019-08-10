@@ -1,0 +1,203 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(lubridate)
+```
+
+1. Load in the code_clan_tweets.csv. Find the number of rows, columns, and lists of all the variable names.
+```{r}
+code_clan_tweet <- read_csv("data/code_clan_tweets.csv")
+```
+
+```{r}
+dim(code_clan_tweet)
+names(code_clan_tweet)
+```
+
+```{r}
+head(code_clan_tweet)
+```
+
+```{r}
+tail(code_clan_tweet)
+```
+
+2. First, we’re going to summarise the number of likes CodeClan tweets have. Create a boxplot to check for outliers.
+```{r}
+ggplot(code_clan_tweet) +
+  aes(x = favorite_count) +
+  geom_histogram(fill = "#fee391", binwidth = 2) +
+  labs(
+    x = "Number of likes",
+    title = "Histogram of number of likes\nfor CodeClan's twitter account"
+  ) +
+  scale_x_continuous(breaks = seq(0, 35, 5)) +
+  theme_dark() +
+  theme(
+    title = element_text(size = 12, face = "bold"), 
+    axis.title = element_text(size = 8, face = "bold"), 
+    panel.grid.major = element_line(colour = "grey84"), 
+    panel.grid.minor = element_line(colour = "grey54")
+  )
+```
+
+
+```{r}
+ggplot(code_clan_tweet) +
+  aes(y = favorite_count) +
+  geom_boxplot(colour = "#fee391") +
+  labs(
+    y = "Number of likes",
+    title = "Box plot of number of likes\nfor CodeClan's twitter account"
+  ) +
+  scale_y_continuous(breaks = seq(0, 35, 5)) +
+  theme_dark() +
+  theme(
+    title = element_text(size = 12, face = "bold"), 
+    axis.title = element_text(size = 8, face = "bold"), 
+    panel.grid.major = element_line(colour = "grey84"), 
+    panel.grid.minor = element_line(colour = "grey54")
+  )
+```
+
+
+3. Summarise the number of likes (stored in favorite_count) that CodeClan tweets have got. Don’t summarise when it was a quoted tweet (is_quote variable).
+```{r}
+code_clan_tweet %>%
+  filter(is_quote == FALSE) %>%
+  summarise(count = n())
+```
+
+4. Summarise the mean number of retweets (retweet_count), by the type of platform that was used to tweet (source).
+```{r}
+code_clan_tweet %>%
+  group_by(source) %>%
+  summarise(mean = mean(retweet_count)) %>%
+  arrange(desc(mean))
+```
+
+5. Count the number of likes by media type, and arrange them from most likes to least.
+```{r}
+code_clan_tweet %>%
+  group_by(media_type) %>%
+  summarise(sum = sum(favorite_count)) %>%
+  arrange(desc(sum))
+```
+
+6. Find the mean number of characters a CodeClan tweet contains.
+```{r}
+code_clan_tweet %>%
+  summarise(mean = mean(display_text_width))
+```
+
+7. Convert the dates in the created_at variable into ISO format, and store them in a new datetime variable. Get the months and store them in a new variable called month.
+
+```{r}
+map(code_clan_tweet$created_at, dmy_hm)
+
+tweet_with_month <- code_clan_tweet %>%
+                      mutate(Month = month(created_at))
+```
+
+8. Using your new month column, count the number retweets codeclan got in May vs April.
+```{r}
+tweet_with_month %>%
+  group_by(Month) %>%
+  summarise(Count = sum(retweet_count))
+```
+
+9. The code_clan_info.csv contains url and tweet info. Load this in, and join it to the code_clan_tweets data, so that you have a tweet url for wherever you have a tweet.
+```{r}
+code_clan_info <- read_csv("data/code_clan_info.csv")
+```
+
+```{r}
+names(code_clan_info)
+```
+
+```{r}
+all_tweets <- left_join(tweet_with_month, code_clan_info, 
+                        by = "tweet_id")
+```
+
+
+10. From your new joined data, create a variable which has all the hashtags in lowercase for analysis.
+```{r}
+all_tweets$hashtags <- str_to_lower(all_tweets$hashtags)
+```
+
+
+11. Some tweets have more than one hashtag, denoted by the c() expression at the start of the string. Use the substr and str_detect functions to create a tibble where the first letter of the string begins with a c.
+```{r}
+multiple_hashtags_tibble <- all_tweets %>%
+  filter(str_detect(hashtags, "^c")) %>%
+  str_sub(start = 2, end = -1)
+```
+
+
+12. Use the str_extract function to find all cases where a tweet mentions edinburgh anywhere in it. How many mentions of Edinburgh are there in CodeClan’s tweets? Hint: you may need to make sure your tweets are all the same case before searching.
+```{r}
+all_tweets$text <- str_to_lower(all_tweets$text)
+ed_pattern <- "edinburgh"
+edinburghs <- str_extract_all(all_tweets$text, pattern = ed_pattern)
+sum(str_count(all_tweets$text, pattern = ed_pattern))
+```
+
+13. Use str_extract_all with a regular expression to find out which users CodeClan have been tweeting. Hint: think about all the different characters which could be in a username
+```{r}
+user_pattern <- "@[a-zA-Z0-9._-]+[a-zA-Z0-9._-]+"
+users <- str_extract_all(all_tweets$text, user_pattern)
+```
+
+
+Extensions: Tasks
+14. codeclan_info has tweet url (status_url) stored in a string. Save the numeric substring part of the string in a new variable called  status_url_number
+```{r}
+status_url_number <- str_sub(code_clan_info$status_url, 
+                             start = -19)
+```
+
+
+15. Use the str_replace function to replace the url numbers in the status_url_number string with a the word HIDDEN_URL
+```{r}
+hidden_pattern <- "HIDDEN_URL"
+numb_pattern <- "[0-9]{19}"
+status_url_hidden <- str_replace_all(status_url_number, 
+                numb_pattern, 
+                hidden_pattern)
+```
+
+
+16. Use str_detect to see which tweets don’t include a shortened link (https://t.co/**********)
+```{r}
+short_pattern <- "https://t.co/[a-zA-Z0-9]{10}"
+str_detect(code_clan_tweet$text, 
+           pattern = short_pattern, 
+           negate = TRUE)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
