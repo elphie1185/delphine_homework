@@ -132,10 +132,12 @@ all_tweets$hashtags <- str_to_lower(all_tweets$hashtags)
 
 
 11. Some tweets have more than one hashtag, denoted by the c() expression at the start of the string. Use the substr and str_detect functions to create a tibble where the first letter of the string begins with a c.
+
+
 ```{r}
 multiple_hashtags_tibble <- all_tweets %>%
-  filter(str_detect(hashtags, "^c")) %>%
-  str_sub(start = 2, end = -1)
+  filter(str_detect(hashtags, ".\\(|\\).")) %>%
+  mutate(multiple_hashtags = str_sub(hashtags, start = 3, end = -2))
 ```
 
 
