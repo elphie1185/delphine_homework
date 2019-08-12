@@ -1,0 +1,207 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(mice)
+```
+
+Load in the women_in_gov csv file. Make sure you remove all metadata from the top.
+```{r}
+women_in_gov <- read_csv("~/de1_classnotes/week_07/day_1/5_cleaning_data_homework/data/women_in_gov.csv", skip = 4)
+```
+
+Question 2
+Some of the column names contain spaces and numbers. Fix the column names using the make.names function.
+```{r}
+names(women_in_gov) <- make.names(names(women_in_gov))
+dim(women_in_gov)
+```
+
+
+Question 3
+We have some columns in the data that don’t really need to be there. Confirm that the X64, Indicator.Name and Indicator.Code have the same values for all observations. If they do, remove those columns.
+```{r}
+unique(women_in_gov$X64)
+unique(women_in_gov$Indicator.Name)
+unique(women_in_gov$Indicator.Code)
+```
+
+```{r}
+women_in_gov_less_col <- women_in_gov %>%
+  select(-X64) %>%
+  select(-Indicator.Name) %>%
+  select(-Indicator.Code)
+```
+
+
+Question 4
+Now we have got rid of the extra columns, we can rename the remaining country columns to something more tidy. Rename the Country.Name and Country.Code variables to country and code.
+```{r}
+names(women_in_gov_less_col) <- c("Country", "Code", "1960", "1961", "1962", "1963", "1964", "1965", "1966", "1967", "1968", "1969", "1970", "1971", "1972", "1973", "1974", "1975", "1976", "1977", "1978", "1979", "1980", "1981", "1982", "1983", "1984", "1985", "1986", "1987", "1988", "1989", "1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018")
+```
+
+
+Question 5
+Think back to last week where we talked about wide vs long format. As the data is in wide format, it’s pretty clear to see we have a lot of missing values. Reshape the data from wide to long format, so that for each country the year column becomes a row.
+```{r}
+women_in_gov_long <- gather(women_in_gov_less_col, 
+                            year, 
+                            prop_women,  
+                            "1960":"2018")
+dim(women_in_gov_long)
+```
+
+
+Question 6
+You’ll notice your prop_women column contains missing values. Let’s do a few things. First, let’s count how many missing values you have. Then check how many different missing values you have (e.g. how many unique ones do you have). Then decide how you will impute. Will you insert average imputation values, most common imputation values, or use the multiple imputation method? Explain your decision. Then fix the missing values.
+```{r}
+sum(is.na(women_in_gov_long$prop_women))
+dim(women_in_gov_long)
+class(women_in_gov_long$prop_women)
+```
+
+prop_women is numeric -> only NA in the column
+```{r}
+women_in_gov_long %>%
+  filter(!is.na(prop_women)) %>%
+  group_by(year) %>%
+  summarise(mean_prop = mean(prop_women), median_prop = median(prop_women))
+```
+
+No data for years before 1990 and between 1990 and 1997
+These rows are removed:
+Data quite spread - using the median wouldn't be accurate
+Remove the rest too??
+```{r}
+women_prop_1990 <- women_in_gov_long %>%
+  filter(year %in% c(seq(1997, 2018, 1), 1990)) %>%
+  filter(!is.na(prop_women))
+```
+
+
+Question 7
+Create a boxplot to see if there are any outliers in the proportion of women.
+```{r}
+ggplot(women_prop_1990) +
+  aes(y = prop_women) +
+  geom_boxplot()
+```
+
+Question 8
+Use the outliers package to calculate a zscore for each observation in your data. Mark any of the values in the prop_women column that are more or less than 3 standard deviations above or below the mean as outliers. Add this outlier flag as a new column within the dataset. Create a table that only contains the outliers and have a look at them.
+```{r}
+library(outliers)
+```
+
+```{r}
+prop_zscores <- scores(women_prop_1990$prop_women, type = "z")
+
+# prop within 3SD
+is_outlier <- prop_zscores > 3 | prop_zscores < -3
+women_prop_1990$is_outlier <- is_outlier
+```
+
+```{r}
+ggplot(women_prop_1990) +
+  aes(y = prop_women) +
+  geom_boxplot() +
+  facet_wrap(~is_outlier)
+```
+
+```{r}
+ggplot(women_prop_1990) +
+  aes(x = year, y = prop_women) +
+  geom_bar(stat = "identity") +
+  facet_wrap(~is_outlier)
+```
+
+```{r}
+ggplot(women_prop_1990) +
+  aes(x = year, y = prop_women, colour = Country) +
+  geom_point(show.legend = FALSE) +
+  facet_wrap(~is_outlier)
+```
+Question 9
+Next decide - what will you do with these outliers? Create a table with your newly dealt with outliers.
+```{r}
+# Separating the outliers from the rest of the data 
+# Outliers might be relatd to country populations...
+
+prop_outliers <- subset(women_prop_1990, women_prop_1990$is_outlier == TRUE)
+prop_no_outlier <- subset(women_prop_1990, women_prop_1990$is_outlier == FALSE)
+dim(prop_no_outlier)
+```
+
+Extension task
+Complete the following task:
+
+We will be looking for outliers and relationships between the receipt_description variable and the receipt_value variable. Load in the data. Check the variable names, and check for missing values in the variable of interest receipt_value.
+```{r}
+brazil_data <- read_csv("~/de1_classnotes/week_07/day_1/5_cleaning_data_homework/data/deputies_info.csv", col_types = cols("receipt_date"= col_datetime("%d/%m/%y %H:%M")))
+head(brazil_data)
+```
+
+Changing bugged date in a logical variable
+Changing receipt number to characters.
+```{r}
+brazil_data_type <- brazil_data %>%
+    mutate(date_issue = as.logical(bugged_date)) %>%
+    select(-bugged_date) %>%
+    mutate(receipt_secu_numb = as.character(format(receipt_social_security_number, 
+                                      scientific = FALSE))) %>%
+    select(-receipt_social_security_number)
+```
+
+
+Spend some time visualizing any outliers in the receipt_value column. Does it have a relationship with the receipt_description column?
+```{r}
+ggplot(brazil_data_type) +
+  aes(y = receipt_value, colour = receipt_description) +
+  geom_boxplot() +
+  facet_wrap(~receipt_description)
+```
+
+```{r}
+ggplot(brazil_data_type) +
+  aes(y = receipt_value, colour = political_party) +
+  geom_boxplot() +
+  facet_wrap(~political_party)
+```
+
+Identify which rows in the receipt_value column of data_v1 dataset are outliers. Try plotting them or looking through just the outliers.
+Calculate the outlier zcores for the receipt_value column. Replot the data, and then remove the outliers.
+```{r}
+brazil_zscores <- scores(brazil_data_type$receipt_value, type = "z")
+
+# prop within 3SD
+is_brazil_outlier <- brazil_zscores > 3 | brazil_zscores < -3
+brazil_data_type$is_brazil_outlier <- is_brazil_outlier
+```
+
+```{r}
+ggplot(brazil_data_type) +
+  aes(y = receipt_value, colour = receipt_description) +
+  geom_boxplot() +
+  facet_grid(receipt_description~is_brazil_outlier) +
+  labs(
+    y = "Receipt Values\n", 
+    title = "Box Plot of Receipt Values"
+  ) +
+  theme(
+    title = element_text(face = "bold", size = 12),
+    axis.title = element_text(face = "bold", size = 8),
+    strip.background = element_rect(fill = "#023858"),
+    strip.text = element_text(colour = "#d0d1e6", face = "bold", size = 6)
+  )
+```
+
+```{r}
+brazil_no_outlier <- subset(brazil_data_type, is_brazil_outlier == FALSE)
+```
+
+
+
