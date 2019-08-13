@@ -105,12 +105,12 @@ ggplot() +
                                  colour = "powderblue") +
   geom_smooth(data = project, 
               aes(x = estimated_length, y = actual_length), 
-                  method = "lm", colour = "red") +
+                  method = "lm", colour = "red", linetype = "dotted") +
   geom_point(data = project_less_non_inf, aes(x = estimated_length, y = actual_length), 
                                  colour = "yellow1") +
   geom_smooth(data = project_less_non_inf, 
               aes(x = estimated_length, y = actual_length), 
-                  method = "lm", colour = "orange") +
+                  method = "lm", colour = "orange", linetype = "dotted") +
   labs(
     x = "Estimated Project Length",
     y = "Actual Project Length",
@@ -148,12 +148,12 @@ ggplot() +
                                  colour = "powderblue") +
   geom_smooth(data = project, 
               aes(x = estimated_length, y = actual_length), 
-                  method = "lm", colour = "red") +
+                  method = "lm", colour = "red", linetype = "dotted") +
   geom_point(data = project_less_inf, aes(x = estimated_length, y = actual_length), 
                                  colour = "yellow1") +
   geom_smooth(data = project_less_inf, 
               aes(x = estimated_length, y = actual_length), 
-                  method = "lm", colour = "orange") +
+                  method = "lm", colour = "orange", linetype = "dotted") +
   labs(
     x = "Estimated Project Length",
     y = "Actual Project Length",
@@ -172,8 +172,11 @@ Return to your fitted model for the complete data set and examine and comment up
 
 YES
 
+There are various techniques to perform what is known as ‘robust regression’ on a dataset. Robust methods are less affected by the presence of outliers. See the rlm() function (‘robust linear model’) in the MASS package and this blog post.
 
-
+```{r}
+library(MASS)
+```
 
 
 
