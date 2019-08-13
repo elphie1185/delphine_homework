@@ -56,7 +56,7 @@ Regress actual_length on estimated_length and confirm your visual assessment of 
 ggplot(project) +
   aes(x = estimated_length, y = actual_length) +
   geom_point(colour = "powderblue") +
-  geom_smooth(method = "lm", colour = "thistle") +
+  geom_smooth(method = "lm", colour = "deepskyblue1") +
   labs(
     x = "Estimated Project Length",
     y = "Actual Project Length",
@@ -105,7 +105,7 @@ ggplot() +
                                  colour = "powderblue") +
   geom_smooth(data = project, 
               aes(x = estimated_length, y = actual_length), 
-                  method = "lm", colour = "red", linetype = "dotted") +
+                  method = "lm", colour = "deepskyblue1") +
   geom_point(data = project_less_non_inf, aes(x = estimated_length, y = actual_length), 
                                  colour = "yellow1") +
   geom_smooth(data = project_less_non_inf, 
@@ -148,7 +148,7 @@ ggplot() +
                                  colour = "powderblue") +
   geom_smooth(data = project, 
               aes(x = estimated_length, y = actual_length), 
-                  method = "lm", colour = "red", linetype = "dotted") +
+                  method = "lm", colour = "deepskyblue1") +
   geom_point(data = project_less_inf, aes(x = estimated_length, y = actual_length), 
                                  colour = "yellow1") +
   geom_smooth(data = project_less_inf, 
@@ -179,7 +179,37 @@ library(MASS)
 ```
 
 
+```{r}
+fm.rlm <- rlm(project$actual_length ~ project$estimated_length, data = project)
+plot(project$actual_length ~ project$estimated_length, data = project)
+abline(lin_model, col = "blue")
+abline(fm.rlm, col="red")
+legend("topright", inset=0.05, bty="n",
+       legend = c("lm fit to original data", "rlm fit"),
+       lty = c(1, 1),      # 1 = "solid" ; 2 = "dashed"
+       col = c("black", "black", "red", "blue")
+       )
+```
 
+with ggplot
+```{r}
+ggplot(project) +
+  aes(x = estimated_length, y = actual_length) +
+  geom_point(colour = "powderblue") +
+  geom_smooth(method = "lm", colour = "deepskyblue1") +
+  geom_smooth(method = "rlm", colour = "orange", linetype = "dotted") +
+  labs(
+    x = "Estimated Project Length",
+    y = "Actual Project Length",
+    title = "Linear Regression"
+  ) +
+  theme_dark() +
+  theme(
+    title = element_text(size = 12, face = "bold"), 
+    axis.title = element_text(size = 8, face = "bold"), 
+    panel.grid = element_line(colour = "grey67")
+  )
+```
 
 
 
