@@ -1,0 +1,187 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+1. how to interpret the Residuals vs Leverage diagnostic plot produced by plotting the lm() model object
+
+Looking at the sensitivity of the fitted predicted y in a change in actual y
+Cook's distance : measures the effect of deleting a point on the combined parameter vector (dotted red line). The point outsde the dotted red line have a high influence. 
+
+2. Project Management Analysis
+
+Loading library
+```{r}
+library(tidyverse)
+```
+
+Load the data into a dataframe project
+```{r}
+project <- read_csv("~/de1_classnotes/week_07/day_2/5_regression_homework/project_management.csv")
+```
+
+```{r}
+dim(project)
+names(project)
+head(project)
+```
+
+Plot the data
+```{r}
+ggplot(project) +
+  aes(x = estimated_length, y = actual_length) +
+  geom_point(colour = "powderblue") +
+  labs(
+    x = "Estimated Project Length",
+    y = "Actual Project Length",
+    title = "Comparison of Actual and\nEstimated Project Length"
+  ) +
+  geom_text(aes(label = X1), nudge_x = 0.5, 
+            nudge_y = 0.7, size = 2.5, colour = "white") +
+  theme_dark() +
+  theme(
+    title = element_text(size = 12, face = "bold"), 
+    axis.title = element_text(size = 8, face = "bold"), 
+    panel.grid = element_line(colour = "grey67")
+  )
+```
+
+potential outliers: 
+5 : influential
+18: not influential
+
+
+Regress actual_length on estimated_length and confirm your visual assessment of which points are ‘influential’ or ‘non-influential’ outliers based on the “Cook’s distance” lines in the Residuals vs Leverage diagnostic plot.
+```{r}
+ggplot(project) +
+  aes(x = estimated_length, y = actual_length) +
+  geom_point(colour = "powderblue") +
+  geom_smooth(method = "lm", colour = "thistle") +
+  labs(
+    x = "Estimated Project Length",
+    y = "Actual Project Length",
+    title = "Linear Regression"
+  ) +
+  theme_dark() +
+  theme(
+    title = element_text(size = 12, face = "bold"), 
+    axis.title = element_text(size = 8, face = "bold"), 
+    panel.grid = element_line(colour = "grey67")
+  )
+```
+
+```{r}
+plot(project$estimated_length, project$actual_length)
+lin_model <- lm(project$actual_length ~ project$estimated_length, data = project)
+predict_at <- data.frame(x = seq(10, 25, 0.5))
+predicted_y <- predict(lin_model, newdata = predict_at)
+abline(lin_model)
+plot(lin_model)
+lin_model
+```
+
+Obtain the intercept and regression coefficient of variable estimated_length for a simple linear model fitted to data omitting one of your non-influential outlier points.
+```{r}
+project_less_non_inf <- subset(project, X1 != 18)
+
+lin_model_less_ni <- lm(project_less_non_inf$actual_length ~ project_less_non_inf$estimated_length, 
+                data = project_less_non_inf)
+lin_model_less_ni
+```
+
+How different are the intercept and coefficient from those obtained above by fitting the full data set? Does this support classifying the omitted point as non-influential?
+
+All data: coef_intercept = 1.416
+                    coef = 1.223
+                    
+W/o non-influential coef_intercept = 1.591
+                    coef = 1.221
+               
+Plot the data points, this regression line and the regression line for the full data set. How different are the lines?
+
+```{r}
+ggplot() +
+  geom_point(data = project, aes(x = estimated_length, y = actual_length), 
+                                 colour = "powderblue") +
+  geom_smooth(data = project, 
+              aes(x = estimated_length, y = actual_length), 
+                  method = "lm", colour = "red") +
+  geom_point(data = project_less_non_inf, aes(x = estimated_length, y = actual_length), 
+                                 colour = "yellow1") +
+  geom_smooth(data = project_less_non_inf, 
+              aes(x = estimated_length, y = actual_length), 
+                  method = "lm", colour = "orange") +
+  labs(
+    x = "Estimated Project Length",
+    y = "Actual Project Length",
+    title = "Linear Regression"
+  ) +
+  theme_dark() +
+  theme(
+    title = element_text(size = 12, face = "bold"), 
+    axis.title = element_text(size = 8, face = "bold"), 
+    panel.grid = element_line(colour = "grey67")
+  )
+```
+
+Repeat the procedure above, but this time omitting one of your influential outliers.
+
+```{r}
+project_less_inf <- subset(project, X1 != 5)
+
+lin_model_inf <- lm(project_less_inf$actual_length ~ project_less_inf$estimated_length, 
+                data = project_less_inf)
+lin_model_inf
+```
+
+How different are the intercept and coefficient from those obtained above by fitting the full data set? Does this support classifying the omitted point as non-influential?
+
+All data: coef_intercept = 1.416
+                    coef = 1.223
+                    
+W/o influential coef_intercept = 4.381
+                    coef = 1.011
+                    
+```{r}
+ggplot() +
+  geom_point(data = project, aes(x = estimated_length, y = actual_length), 
+                                 colour = "powderblue") +
+  geom_smooth(data = project, 
+              aes(x = estimated_length, y = actual_length), 
+                  method = "lm", colour = "red") +
+  geom_point(data = project_less_inf, aes(x = estimated_length, y = actual_length), 
+                                 colour = "yellow1") +
+  geom_smooth(data = project_less_inf, 
+              aes(x = estimated_length, y = actual_length), 
+                  method = "lm", colour = "orange") +
+  labs(
+    x = "Estimated Project Length",
+    y = "Actual Project Length",
+    title = "Linear Regression"
+  ) +
+  theme_dark() +
+  theme(
+    title = element_text(size = 12, face = "bold"), 
+    axis.title = element_text(size = 8, face = "bold"), 
+    panel.grid = element_line(colour = "grey67")
+  )
+```
+
+
+Return to your fitted model for the complete data set and examine and comment upon the Residuals vs Fitted,  Normal Q-Q and Scale-Location diagnostic plots. Are the regression assumptions reasonably satisfied?
+
+YES
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -24,6 +24,7 @@ dim(women_in_gov)
 
 Question 3
 We have some columns in the data that don’t really need to be there. Confirm that the X64, Indicator.Name and Indicator.Code have the same values for all observations. If they do, remove those columns.
+
 ```{r}
 unique(women_in_gov$X64)
 unique(women_in_gov$Indicator.Name)
@@ -162,14 +163,20 @@ Spend some time visualizing any outliers in the receipt_value column. Does it ha
 ggplot(brazil_data_type) +
   aes(y = receipt_value, colour = receipt_description) +
   geom_boxplot() +
-  facet_wrap(~receipt_description)
+  facet_wrap(~receipt_description) 
 ```
 
 ```{r}
 ggplot(brazil_data_type) +
   aes(y = receipt_value, colour = political_party) +
   geom_boxplot() +
-  facet_wrap(~political_party)
+  facet_wrap(~political_party)+
+  theme(
+    title = element_text(face = "bold", size = 12),
+    axis.title = element_text(face = "bold", size = 8),
+    strip.background = element_rect(fill = "#023858"),
+    strip.text = element_text(colour = "#d0d1e6", face = "bold", size = 6)
+  )
 ```
 
 Identify which rows in the receipt_value column of data_v1 dataset are outliers. Try plotting them or looking through just the outliers.
