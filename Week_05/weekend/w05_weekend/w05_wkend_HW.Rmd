@@ -16,11 +16,10 @@ sheet_name <- excel_sheets("green_bindle_consulting.xlsx")
 
 ```{r}
 consulting_data <- list()
-i = 1
+
 for(sheet in sheet_name) {
-  consulting_data[[sheet]] <- data.frame(read_excel("green_bindle_consulting.xlsx", 
+  consulting_data[[sheet]] <-     data.frame(read_excel("green_bindle_consulting.xlsx", 
                                      sheet = sheet))
-  i = i + 1
 }
 
 list2env(consulting_data, globalenv())

@@ -15,6 +15,18 @@ Loading library
 library(tidyverse)
 ```
 
+```{r}
+my_theme <- function(){
+  theme_dark() +
+  theme(
+    title = element_text(size = 12, face = "bold"), 
+    axis.title = element_text(size = 8, face = "bold"), 
+    panel.grid = element_line(colour = "grey67")
+  )
+}
+```
+
+
 Load the data into a dataframe project
 ```{r}
 project <- read_csv("~/de1_classnotes/week_07/day_2/5_regression_homework/project_management.csv")
@@ -38,12 +50,8 @@ ggplot(project) +
   ) +
   geom_text(aes(label = X1), nudge_x = 0.5, 
             nudge_y = 0.7, size = 2.5, colour = "white") +
-  theme_dark() +
-  theme(
-    title = element_text(size = 12, face = "bold"), 
-    axis.title = element_text(size = 8, face = "bold"), 
-    panel.grid = element_line(colour = "grey67")
-  )
+  my_theme()
+
 ```
 
 potential outliers: 
@@ -62,12 +70,8 @@ ggplot(project) +
     y = "Actual Project Length",
     title = "Linear Regression"
   ) +
-  theme_dark() +
-  theme(
-    title = element_text(size = 12, face = "bold"), 
-    axis.title = element_text(size = 8, face = "bold"), 
-    panel.grid = element_line(colour = "grey67")
-  )
+  my_theme()
+ 
 ```
 
 ```{r}
@@ -78,6 +82,7 @@ predicted_y <- predict(lin_model, newdata = predict_at)
 abline(lin_model)
 plot(lin_model)
 lin_model
+summary(lin_model)
 ```
 
 Obtain the intercept and regression coefficient of variable estimated_length for a simple linear model fitted to data omitting one of your non-influential outlier points.
@@ -116,12 +121,7 @@ ggplot() +
     y = "Actual Project Length",
     title = "Linear Regression"
   ) +
-  theme_dark() +
-  theme(
-    title = element_text(size = 12, face = "bold"), 
-    axis.title = element_text(size = 8, face = "bold"), 
-    panel.grid = element_line(colour = "grey67")
-  )
+  my_theme()
 ```
 
 Repeat the procedure above, but this time omitting one of your influential outliers.
@@ -144,27 +144,28 @@ W/o influential coef_intercept = 4.381
                     
 ```{r}
 ggplot() +
-  geom_point(data = project, aes(x = estimated_length, y = actual_length), 
-                                 colour = "powderblue") +
+  geom_point(data = project, 
+             aes(x = estimated_length, y = actual_length), 
+             colour = "powderblue") +
   geom_smooth(data = project, 
-              aes(x = estimated_length, y = actual_length), 
-                  method = "lm", colour = "deepskyblue1") +
-  geom_point(data = project_less_inf, aes(x = estimated_length, y = actual_length), 
-                                 colour = "yellow1") +
+              aes(x = estimated_length, y = actual_length, colour ="deepskyblue1"),
+              method = "lm") +
+  geom_point(data = project_less_inf, 
+             aes(x = estimated_length, y = actual_length), 
+             colour = "yellow1") +
   geom_smooth(data = project_less_inf, 
-              aes(x = estimated_length, y = actual_length), 
-                  method = "lm", colour = "orange", linetype = "dotted") +
+              aes(x = estimated_length, y = actual_length, colour = "orange"), 
+              method = "lm", 
+              linetype = "dotted", 
+              fullrange = T) +
+   scale_colour_manual(name="legend", values= c("deepskyblue1", "orange"), 
+                       labels = c("lm fit", "rlm fit")) +
   labs(
     x = "Estimated Project Length",
     y = "Actual Project Length",
     title = "Linear Regression"
   ) +
-  theme_dark() +
-  theme(
-    title = element_text(size = 12, face = "bold"), 
-    axis.title = element_text(size = 8, face = "bold"), 
-    panel.grid = element_line(colour = "grey67")
-  )
+  my_theme()
 ```
 
 
@@ -203,12 +204,7 @@ ggplot(project) +
     y = "Actual Project Length",
     title = "Linear Regression"
   ) +
-  theme_dark() +
-  theme(
-    title = element_text(size = 12, face = "bold"), 
-    axis.title = element_text(size = 8, face = "bold"), 
-    panel.grid = element_line(colour = "grey67")
-  )
+  my_theme()
 ```
 
 
