@@ -11,6 +11,7 @@ library(tidyverse)
 ```{r}
 diamond <- read_csv("diamonds.csv")
 diamond_trim <- subset(diamond, select = c("carat", "x", "y", "z"))
+summary(diamond_trim)
 ```
 
 Load the diamonds.csv data set and undertake an initial exploration of the data. You will find a description of the meanings of the variables on the relevant Kaggle page
@@ -147,10 +148,7 @@ Not justified,
 R_squared still pretty much the same 
 
 Find and plot an appropriate visualisation to show the effect of this interaction
-```{r}
-library(ggiraphExtra)
-ggPredict(log_log_caratclarity)
-```
+
 ```{r}
 coplot(price_log ~ carat_log | clarity, 
        panel = function(x, y, ...){
