@@ -1,0 +1,95 @@
+Q1 I want to predict how well 6 year-olds are going to do in their final school exams. Using the following variables am I likely under-fitting, fitting well or over-fitting? Postcode, gender, reading level, score in maths test, date of birth, family income.
+
+A1: overfitting. Too many criteria. Postcode and family income could be highly correlated, so could reading level and score in math test
+
+
+Q2: If I have two models, one with an AIC score of 34,902 and the other with an AIC score of 33,559 which model should I use?
+
+A2: The model with the AIC score of 33559
+
+
+
+Q3: I have two models, the first with: r-squared: 0.44, adjusted r-squared: 0.43. The second with: r-squared: 0.47, adjusted r-squared: 0.41. Which one should I use?
+
+A3: If the model is a simple regression: use the model with r-squared of 0.47
+    If the model is a multiple regression the model with adjusted r_square of 0.43
+
+
+
+Q4: I have a model with the following errors: RMSE error on test set: 10.3, RMSE error on training data: 10.4. Do you think this model is over-fitting?
+
+A4: No
+
+
+Q5: How does k-fold validation work?
+
+A5: The dta set is separated in k fold subset roughly equivalent in size.
+k-1 subsets are used to train and a set is used to test
+this is repeated until all sets have been used to test
+
+
+Q6: What is a validation set? When do you need one?
+
+A6: A validation set is used to validate the model or to chose between 2 models which one is best.
+
+
+
+Q7: Describe how backwards selection works.
+
+A7: Start with all parameters in the model, remove the parameter which reduces the least the adjusted r_squared ...
+
+
+Q8: Describe how best subset selection works.
+
+A8: for a number of parameters from 1 to n,  all the combination are tested and the best results for each number of paraeters are fed back.  
+
+
+
+Q9: It is estimated on 5% of model projects end up being deployed. What actions can you take to maximise the likelihood of your model being deployed?
+
+A9: make sure that the model is well trained with a robust and reliable data set. And regularly monitor the model performance
+
+
+
+Q10: What metric could you use to confirm that the recent population is similar to the development population?
+
+A10: the score distribution
+
+
+
+Q11: How is the Population Stability Index defined? What does this mean in words?
+
+A11: It's a measure which compares a new data set to the training dataset. It compares the changes in the data sets.
+
+
+
+Q12: Above what PSI value might we need to start to consider rebuilding or recalibrating the model
+
+A12: 0.1, above 0.2 the models need to be rebuilt
+
+
+
+Q13: What are the common errors that can crop up when implementing a model?
+
+Too many false positives
+Low model understanding by the business
+Low business understanding by the modeller
+Too difficult to implement
+Doesn’t address the root cause, only the symptoms of the problem
+Training population too different to actual population
+Unstable over time
+
+
+Q14: After performance monitoring, if we find that the discrimination is still satisfactory but the accuracy has deteriorated, what is the recommended action?
+
+A14: retrain the model, check any changes in the data, check for changes in the data and how it's been supply, check for addition/removal of a variable.
+
+
+
+Q15: Why is it important to have a unique model identifier for each model?
+
+A15: To make sure that each model can be uniquely identified
+
+Q16: Why is it important to document the modelling rationale and approach?
+
+A16: This allows oversight and correction throughout the development process, allowing design decisions to be challenged and issues or errors picked up as early as possible.
