@@ -1,0 +1,150 @@
+Extensions
+Build a decision tree to model the likelihood of a sale being of an organic avocado.
+```{r}
+suppressPackageStartupMessages(library(rpart))
+library(rpart.plot)
+```
+
+Using the avocado_df data
+```{r}
+glimpse(avocado_df)
+```
+
+```{r}
+avocado_tree <- avocado_df %>%
+  mutate(other_bags = (tot_bags - (S_bags + L_bags + XL_bags))) %>%
+  gather(bag_size, bag_quantity, c(S_bags, L_bags, XL_bags, other_bags)) %>%
+  mutate(other_cat = (tot_vol - (cat_plu4046 + cat_plu4225 + cat_plu4770))) %>%
+  gather(category, num_avocado, 
+         c(cat_plu4046, cat_plu4225, cat_plu4770, other_cat)) %>%
+  mutate(month = month(date)) %>%
+  mutate(year = (year)) %>%
+  select(-c(date, region))
+```
+
+shuffling the data
+```{r}
+n_index <- sample(1:nrow(avocado_tree))
+shuffled_tree <- avocado_tree[n_index, ]
+glimpse(shuffled_tree)
+```
+
+
+```{r}
+cleaned_tree <- shuffled_tree %>%
+  select(- c(id)) %>%
+  mutate(type = as_factor(type), 
+         bag_size = as_factor(bag_size), 
+         category = as_factor(category)) 
+ 
+glimpse(cleaned_tree)
+```
+
+Separate the data into test and train
+```{r}
+n_tree <- nrow(cleaned_tree)
+test_index_tree <- sample(1:n_tree, size = n_tree*0.2)
+
+test_tree  <- slice(cleaned_tree, test_index_tree)
+train_tree <- slice(cleaned_tree, -test_index_tree)
+
+```
+
+```{r}
+prop.table(table(test_tree$type))
+prop.table(table(train_tree$type))
+```
+
+```{r}
+tree_fit <- rpart(type ~ ., 
+                  data = train_tree,
+                  method = "class")
+rpart.plot(tree_fit)
+```
+
+Making predictions using the tree
+```{r}
+tree_prediction <- predict(tree_fit, test_tree, type = "class")
+conf_matrix <- table(test_tree$type, tree_prediction)
+conf_matrix
+```
+
+```{r}
+accuracy <- sum(diag(conf_matrix) / sum(conf_matrix))
+accuracy
+```
+
+
+
+Use k-means clustering to investigate potential relationships between the year and the average avocado price
+
+```{r}
+glimpse(avocado_df)
+```
+
+```{r}
+avocado_cluster <- avocado_df %>%
+  select(-c(id, date, tot_vol, tot_bags, region, type)) %>%
+  scale()
+```
+
+
+
+```{r}
+cluster_and_get_squares_within <- function(k) {
+    cluster <- kmeans(avocado_cluster, k)
+    return (cluster$tot.withinss)
+}
+```
+
+
+```{r}
+# Set maximum cluster 
+max_k <- 30
+# Run algorithm over a range of k 
+all_squares_within <- sapply(2:max_k, cluster_and_get_squares_within)
+all_squares_within
+```
+
+
+Elbow plot
+```{r}
+elbow_data <-data.frame(2:max_k, all_squares_within)
+ggplot(elbow_data, aes(x = X2.max_k, y = all_squares_within)) +
+    geom_point() +
+    geom_line() +
+    scale_x_continuous(breaks = seq(1, 30, 1))
+```
+
+
+Difficyult to say what the ideal number of cluster is 
+Let's try 7
+
+```{r}
+year_and_av <- as.data.frame(avocado_cluster) %>%
+  select(av_price, year)
+
+library(animation)
+kmeans.ani(year_and_av, 7)
+```
+
+
+I am sceptical these clusters are useful
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

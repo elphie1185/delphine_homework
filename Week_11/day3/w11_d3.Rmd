@@ -41,7 +41,7 @@ A7: Start with all parameters in the model, remove the parameter which reduces t
 
 Q8: Describe how best subset selection works.
 
-A8: for a number of parameters from 1 to n,  all the combination are tested and the best results for each number of paraeters are fed back.  
+A8: for a number of parameters from 1 to n,  all the combination are tested and the best results for each number of parameters are fed back.  
 
 
 
@@ -54,7 +54,6 @@ A9: make sure that the model is well trained with a robust and reliable data set
 Q10: What metric could you use to confirm that the recent population is similar to the development population?
 
 A10: the score distribution
-
 
 
 Q11: How is the Population Stability Index defined? What does this mean in words?
@@ -89,6 +88,7 @@ A14: retrain the model, check any changes in the data, check for changes in the 
 Q15: Why is it important to have a unique model identifier for each model?
 
 A15: To make sure that each model can be uniquely identified
+
 
 Q16: Why is it important to document the modelling rationale and approach?
 

@@ -1,0 +1,165 @@
+
+Loading the data
+```{r}
+glimpse(avocado_trim)
+```
+
+Checking the correlation between the number of bags and sales
+```{r}
+cor(avocado_trim$total_sales, avocado_trim$bag_quantity)
+```
+
+
+The 2 variables seem to be fairly highly correlated, 
+let's remove the bag quantity and see if it changes the model
+```{r}
+avocado_no_bags <- avocado_trim %>%
+  select(-bag_quantity)
+```
+
+
+Let's split the data into train and test
+```{r}
+n <- nrow(avocado_no_bags)
+test_index_no_bags <- sample(1:n, size = n*0.2)
+
+test_no_bag  <- slice(avocado_no_bags, test_index_no_bags)
+train_no_bag <- slice(avocado_no_bags, -test_index_no_bags)
+
+# and prepare a sub-set without the region to make calculations faster
+train_no_bag_region <- train_no_bag %>%
+  select(-region)
+```
+
+Finding the best model
+Let's comapre the best models to predict the sales of avocado using the different type of methods: 
+```{r}
+library(leaps)
+```
+
+```{r}
+regsubsets_forward <- regsubsets(total_sales ~ ., 
+                                 data = train_no_bag_region, nvmax = 11, 
+                                 method = "forward")
+sum_regsubsets_forward <- summary(regsubsets_forward)
+
+plot(regsubsets_forward, scale = "bic")
+```
+ typeorganic - year - month 
+
+```{r}
+regsubsets_back <- regsubsets(total_sales ~ ., 
+                                 data = train_no_bag_region, nvmax = 11, 
+                                 method = "backward")
+sum_regsubsets_back <- summary(regsubsets_back)
+
+plot(regsubsets_back, scale = "bic")
+```
+ typeorganic -  year - month 
+
+```{r}
+regsubsets_subset <- regsubsets(total_sales ~ ., 
+                                 data = train_no_bag_region, nvmax = 11, 
+                                 method = "exhaustive")
+sum_regsubsets_subset <- summary(regsubsets_subset)
+
+plot(regsubsets_subset, scale = "bic")
+```
+
+
+
+Let's plot the bic
+```{r}
+plot(sum_regsubsets_subset$bic, type = "b")
+```
+
+We can see that 5-6 parameters should be enough.
+The first 3 categories are 
+  - typeorganic 
+  - year 
+  - month 
+  
+
+```{r}
+model_a <- lm(total_sales ~  type + year + month, 
+                data = train_no_bag)
+
+model_a_reg <- lm(total_sales ~ type + year + month + region, 
+                data = train_no_bag)
+
+summary(model_a)
+summary(model_a_reg)
+```
+
+The region seem to have an impact although not all p-values indicate they are statistically significant
+```{r}
+anova(model_1, model_1_reg)
+```
+
+Would the type of bags or the category of avocado add any information?
+
+```{r}
+model_b <- lm(total_sales ~ type + year + month + region + bag_size, 
+                data = train_no_bag)
+summary(model_b)
+anova(model_a_reg, model_b)
+```
+
+```{r}
+model_c <- lm(total_sales ~ type + year + month + region + category, 
+                data = train_no_bag)
+summary(model_c)
+anova(model_a_reg, model_c)
+```
+
+```{r}
+par(mfrow = c(2, 2))
+plot(model_a_reg)
+```
+
+It doesn't look great let's try with the log or square_rt of the sales
+```{r}
+model_a_log <- lm(log(total_sales) ~region + type + year + month, 
+                data = train_no_bag)
+model_a_sqrt <- lm(sqrt(total_sales) ~region + type + year + month, 
+                data = train_no_bag)
+
+summary(model_a_log)
+summary(model_a_sqrt)
+
+```
+
+
+
+```{r}
+par(mfrow = c(2, 2))
+plot(model_a_log)
+```
+
+much better
+
+
+Let's check how the model performs on the test set
+```{r}
+predictions <- predict(model_a_log, newdata = test_no_bag)
+predict_and_actual <- test_no_bag %>%
+  mutate(predict_sales = exp(predictions)) %>%
+  mutate(residuals = (sqrt((predict_sales - total_sales) ** 2))) %>%
+  select(total_sales, predict_sales, residuals) 
+
+ggplot(predict_and_actual) +
+  aes(x = total_sales, y = predict_sales) +
+  geom_point(colour = "orange", shape = 3) +
+  geom_smooth()
+
+```
+
+Calculating the average error on prediction
+```{r}
+mean(sum(predict_and_actual$residuals))
+```
+
+
+Looks like we have a good model here! Again the adjusted R-squared looks too good to be true
+I am not sure what else I should remove !!
+

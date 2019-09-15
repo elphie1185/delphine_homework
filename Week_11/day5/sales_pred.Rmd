@@ -1,0 +1,275 @@
+```{r}
+library(tidyverse)
+library(lubridate)
+```
+
+Loading the data
+```{r}
+avocado_df <- read_csv("avocado.csv")
+glimpse(avocado_df)
+```
+
+Checking for issing values
+
+```{r}
+summary(avocado_df)
+```
+We can see that there is no missing values. 
+
+
+The column names are not very straightforward - let's rename them
+```{r}
+colnames(avocado_df)
+```
+
+```{r}
+col_names <- c("id", "date", "av_price", "tot_vol", "cat_plu4046", "cat_plu4225",
+               "cat_plu4770", "tot_bags", "S_bags", "L_bags", "XL_bags", "type", 
+               "year", "region")
+```
+
+```{r}
+colnames(avocado_df) <- col_names
+```
+
+
+
+Checking for dependant variables for bags and number of avocados
+There seem to be different bag types and categories
+need to check if the total equal to the sum of the other type
+We can then gather the columns into type and number of
+```{r}
+avocado <- avocado_df %>%
+  mutate(bags = as.numeric(tot_bags == (S_bags + L_bags + XL_bags))) %>%
+  mutate(volume = as.numeric(tot_vol == (cat_plu4225 + cat_plu4046 + cat_plu4770)))
+```
+
+
+```{r}
+nrow(avocado)
+sum(avocado$bags)
+sum(avocado$volume)
+```
+Sum is different than totel for both. Let's create a new type called others
+before gathering the columns
+
+# Clean the data set
+create a total sales columns which is the number of avocados * avg_price
+X1: seem to be an id column we can delete it
+year: can be extracted from the date, we can delete it
+we can separate the date column into day of the month, year
+seems that all days are mondays so we just need the month
+althought the total and number of avocado in each category is different, the values are too closely related to be used in the model
+
+```{r}
+avocado_trim <- avocado %>%
+  mutate(total_sales = (av_price * tot_vol)) %>%
+  mutate(other_bags = (tot_bags - (S_bags + L_bags + XL_bags))) %>%
+  gather(bag_size, bag_quantity, c(S_bags, L_bags, XL_bags, other_bags)) %>%
+  mutate(other_cat = (tot_vol - (cat_plu4046 + cat_plu4225 + cat_plu4770))) %>%
+  gather(category, num_avocado, 
+         c(cat_plu4046, cat_plu4225, cat_plu4770, other_cat)) %>%
+  mutate(month = as.character(month(date))) %>%
+  mutate(year = as.character((year))) %>%
+  select(-c(tot_bags, date, id, bags, volume, av_price, tot_vol, num_avocado))
+
+glimpse(avocado_trim)
+  
+```
+
+
+Let's split the data into train and test
+```{r}
+n_data <- nrow(avocado_trim)
+test_index <- sample(1:n_data, size = n_data*0.2)
+
+test  <- slice(avocado_trim, test_index)
+train <- slice(avocado_trim, -test_index)
+
+# and prepare a sub-set without the region to make calculations faster
+train_no_region <- train %>%
+  select(-region)
+```
+
+Finding the best model
+Let's comapre the best models to predict the sales of avocado using the different type of methods: 
+```{r}
+library(leaps)
+```
+
+```{r}
+regsubsets_forward <- regsubsets(total_sales ~ ., 
+                                 data = train_no_region, nvmax = 11, 
+                                 method = "forward")
+sum_regsubsets_forward <- summary(regsubsets_forward)
+
+plot(regsubsets_forward, scale = "bic")
+```
+bag_quantity - typeorganic - size_bag - year - month 
+
+```{r}
+regsubsets_back <- regsubsets(total_sales ~ ., 
+                                 data = train_no_region, nvmax = 11, 
+                                 method = "backward")
+sum_regsubsets_back <- summary(regsubsets_back)
+
+plot(regsubsets_back, scale = "bic")
+```
+bag_quantity - typeorganic - size_bag - year - month 
+
+```{r}
+regsubsets_subset <- regsubsets(total_sales ~ ., 
+                                 data = train_no_region, nvmax = 11, 
+                                 method = "exhaustive")
+sum_regsubsets_subset <- summary(regsubsets_subset)
+
+plot(regsubsets_subset, scale = "bic")
+```
+
+bag_quantity - typeorganic - size_bag - year - month 
+
+Let's plot the bic
+```{r}
+plot(sum_regsubsets_subset$bic, type = "b")
+```
+
+We can see that 4-5 parameters should be enough.
+The first 5 categories are 
+  - bag_quantity 
+  - typeorganic 
+  - size_bag 
+  - year 
+  - month 
+  
+Not all cat of bags or avocados are included. Let's start with a model with only
+two predicting variable and check if the region makes a difference
+```{r}
+colnames(avocado_trim)
+```
+
+```{r}
+model_1 <- lm(total_sales ~  bag_quantity, 
+                data = train)
+
+model_1_reg <- lm(total_sales ~ bag_quantity + region, 
+                data = train)
+
+summary(model_1)
+summary(model_1_reg)
+```
+
+The region seem to have an impact although not all p-values indicate they are statistically significant
+```{r}
+anova(model_1, model_1_reg)
+```
+
+```{r}
+model_2 <- lm(total_sales ~ bag_quantity + region + type, 
+                data = train)
+summary(model_2)
+anova(model_1_reg, model_2)
+```
+
+```{r}
+model_3 <- lm(total_sales ~ bag_quantity + region + type + year, 
+                data = train)
+summary(model_3)
+anova(model_2, model_3)
+```
+
+```{r}
+par(mfrow = c(2, 2))
+plot(model_3)
+```
+
+It doesn't look great let's try with the log or square_rt of the sales
+```{r}
+model_3_log <- lm(log(total_sales) ~bag_quantity + region + type + year, 
+                data = train)
+model_3_sqrt <- lm(sqrt(total_sales) ~ bag_quantity + region + type + year, 
+                data = train)
+
+summary(model_3_log)
+summary(model_3_sqrt)
+
+```
+
+
+
+```{r}
+par(mfrow = c(2, 2))
+plot(model_3_log)
+```
+
+much better
+
+
+Let's check how the model performs on the test set
+```{r}
+predictions <- predict(model_3_log, newdata = test)
+predict_and_actual <- test %>%
+  mutate(predict_sales = exp(predictions)) %>%
+  mutate(residuals = (sqrt((predict_sales - total_sales) ** 2))) %>%
+  select(total_sales, predict_sales, residuals) 
+
+ggplot(predict_and_actual) +
+  aes(x = total_sales, y = predict_sales) +
+  geom_point(colour = "orange", shape = 3) +
+  geom_smooth()
+
+```
+
+Calculating the average error on prediction
+```{r}
+mean(sum(predict_and_actual$residuals))
+```
+
+
+That's not great! but the graph doesn't look too far off...
+
+K-fold check on the whole data set
+```{r}
+library(caret)
+
+cv_10_fold <- trainControl(method = "cv", number = 10, savePredictions = TRUE)
+
+model <- train(total_sales ~ .,
+               data = avocado_trim,
+               trControl = cv_10_fold,
+               method = 'lm')
+```
+
+
+```{r}
+mean(model$resample$RMSE)
+mean(model$resample$Rsquared)
+```
+
+
+Comparison to model : mod4_4var
+```{r}
+cv_10_fold_2 <- trainControl(method = "cv", number = 10, savePredictions = TRUE)
+
+model_2 <- train(log(total_sales) ~bag_quantity + region + type + year,
+               data = avocado_trim,
+               trControl = cv_10_fold_2,
+               method = 'lm')
+```
+
+```{r}
+mean(model_2$resample$RMSE)
+mean(model_2$resample$Rsquared)
+```
+
+Adj r_squared seem too high to be true 
+Might need to repeat the model without the number of bags
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,126 @@
+```{r}
+colnames(avocado_df)
+```
+
+
+
+```{r}
+avocado_num <- avocado_df %>%
+  mutate(month = as.character(month(date))) %>%
+  mutate(year = as.character((year))) %>%
+  mutate(other_bags = (tot_bags - (S_bags + L_bags + XL_bags))) %>%
+  gather(bag_size, bag_quantity, c(S_bags, L_bags, XL_bags, other_bags)) %>%
+  gather(category, num_avocado, 
+         c(cat_plu4046, cat_plu4225, cat_plu4770)) %>%
+  select(-c(date, id, tot_bags, num_avocado, bag_quantity))
+
+glimpse(avocado_num)
+```
+
+Separate the data set in test and train
+```{r}
+n_row <- nrow(avocado_num)
+index_shuffle <- sample(1:n_row, size = n_row*0.2)
+
+test_num  <- slice(avocado_num, index_shuffle)
+train_num <- slice(avocado_num, -index_shuffle)
+```
+
+
+LEt's remove the region to make calculations faster
+```{r}
+train_no_reg <- train_num %>%
+  select(-region)
+```
+
+
+```{r}
+regsubsets_sub <- regsubsets(tot_vol ~ ., 
+                                 data = train_no_reg, nvmax = 15, 
+                                 method = "exhaustive")
+sum_regsubsets_sub <- summary(regsubsets_sub)
+
+plot(regsubsets_sub, scale = "bic")
+```
+
+The type seems to be the most inportant predictor
+```{r}
+num_1a <- lm(tot_vol ~ type, data = train_num)
+num_1b <- lm(tot_vol ~ av_price, data = train_num)
+
+summary(num_1a)
+summary(num_1b)
+```
+
+The R_sq is poor but the type is a better predictor
+Let's see if the region would help
+```{r}
+num_2a <- lm(tot_vol ~ type + region, data = train_num)
+num_2b <- lm(tot_vol ~ av_price + region, data = train_num)
+
+summary(num_2a)
+summary(num_2b)
+```
+
+although some of the p-values are quite high, but the adj R_squared is improved
+```{r}
+anova(num_1a, num_2a)
+```
+
+Much better - let's add the average price or the year or the catgory
+```{r}
+num_3a <- lm(tot_vol ~ type + region + av_price , data = train_num)
+num_3b <- lm(tot_vol ~ type + region + year, data = train_num)
+num_3c <- lm(tot_vol ~ type + region + category, data = train_num)
+
+summary(num_3a)
+summary(num_3b)
+summary(num_3c)
+```
+
+None of the categories seem to be statistically significant. Let's leave them
+```{r}
+num_4a <- lm(tot_vol ~ type + region + year + av_price, data = train_num)
+num_4b <- lm(tot_vol ~ type + region + year + month, data = train_num)
+
+summary(num_4a)
+summary(num_4b)
+```
+
+```{r}
+anova(num_3b, num_4b)
+```
+
+```{r}
+
+par(mfrow = c(2, 2))
+plot(num_4b)
+
+```
+
+it doesn't look great :( 
+
+Let's check how the model performs on the test set
+```{r}
+predict_num <- predict(num_4b, newdata = test_num)
+actual_predict <- test_num %>%
+  mutate(predict_num = predict_num) %>%
+  mutate(residual = (sqrt((predict_num - tot_vol) ** 2))) %>%
+  select(tot_vol, predict_num, residual, av_price) 
+
+ggplot(actual_predict) +
+  geom_point(aes(x = av_price, y = predict_num), 
+             colour = "blue", 
+             shape = 3) +
+  geom_point(aes(x = av_price, y = tot_vol), 
+             colour = "green", 
+             shape = 5)
+
+```
+
+
+
+
+
+
+
