@@ -1,0 +1,97 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+```
+
+
+Load the data again and re-familiarise yourself with it
+```{r}
+ames <- read_csv("ames.csv")
+```
+
+
+Investigate the distribution of Lot.Area. Is the distribution roughly normal? If not, what problems do you find?
+```{r}
+ames %>%
+  ggplot(aes(x = Lot.Area)) +
+  geom_histogram(binwidth = 500)
+```
+
+
+Do you think any problematic features in the distribution of Lot.Area will cause any difficulties in estimating CIs or performing hypotheses tests using this variable?
+# The values with high lot area might be problematic
+
+Compute a 95% CI for the mean Lot.Area of the sold houses.
+```{r}
+
+library(rcompanion)
+groupwiseMean(Lot.Area ~ 1, 
+              data = ames, 
+              conf = 0.95)
+```
+
+You would like to know the mean Lot.Area of the sold houses with higher confidence. Calculate the 99% CI for this variable. Is it narrower or broader than the 95% CI? Does that make sense?
+```{r}
+groupwiseMean(Lot.Area ~ 1, 
+              data = ames, 
+              conf = 0.99)
+```
+
+
+Can you split out and show separate 99% CIs for mean Lot.Area grouped by House.Style? Do you see any CIs you might not trust?
+```{r}
+groupwiseMean(Lot.Area ~ House.Style, 
+              data = ames, 
+              conf = 0.99)
+```
+# Some of the groups have very few observations 2.5Fin for example
+
+Calculate a 99% CI for the proportion of houses in the data built before 1890. Try using the wilson and wald methods. How different are the bounds of the CIs given by the two methods?
+```{r}
+library(DescTools)
+ames <- ames %>%
+  mutate(build_bef_1890 = (Year.Built < 1890))
+
+build <- table(ames$build_bef_1890)
+sum <- sum(build)
+
+BinomCI(x = build, 
+        n = sum, 
+        conf.level = 0.99, 
+        method = "wilson")
+```
+
+```{r}
+BinomCI(x = build, 
+        n = sum, 
+        conf.level = 0.99, 
+        method = "wald")
+```
+
+```{r}
+wilson_false <- 0.998240217 - 0.992008861
+wilson_true <- 0.007991139 - 0.001759783
+wald_false <- 0.999155975 - 0.9933354922
+wald_true <- 0.006664508 - 0.0008440246
+```
+
+# both methods have similar width for the CI the wald method shows a larger distance between the upr.ci for true and lower.ci for false than wilson
+
+
+do a bit of reading on the Wald and Wilson methods. Why do you think the bounds produced by the two methods are more significantly different when the proportion is closer to 0? Which method would you choose for the ‘proportion before 1890’ CI?
+
+Calculate 95% CIs for the proportion of total house sales made up by each level of House.Style in the data
+```{r}
+levels(ames$House.Style)
+obs <- table(ames$House.Style)
+
+MultinomCI(x = obs, 
+           conf.level = 0.95, 
+           method = "wilson")
+```
+
+
