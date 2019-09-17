@@ -1,0 +1,161 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+1 MVP
+In this homework we’ll use the msleep data set provided in the ggplot package. It concerns the sleeping patterns of various types of mammal.
+
+```{r}
+library(tidyverse)
+data(msleep)
+```
+
+```{r}
+summary(msleep)
+```
+
+# data set shows a few mssing values
+
+```{r}
+glimpse(msleep)
+```
+
+```{r}
+dim(msleep)
+```
+
+# too many missing values to remove them
+
+```{r}
+ggplot(msleep) +
+  aes(x = vore, y = sleep_total) +
+  geom_boxplot()
+
+```
+
+
+Jabberwockies sleep for around 7 hours a night, on average. Perform an appropriate statistical test to determine whether the mean sleep_total in the sampled population of animal types differs from the typical value for jabberwockies.
+
+Let's see the distribution of the total_sleep
+```{r}
+ggplot(msleep) +
+  aes(x = sleep_total) +
+  geom_histogram()
+```
+
+Can we apply the central limit theorem?: 
+```{r}
+
+nrow(msleep)
+nrow(msleep) * 7 
+(1 - 7) * nrow(msleep)
+```
+
+# Let's define the hypothesis
+# alpha = 0.05
+# H0: mean_sleep of the sample = 7
+# H1: mean_sleep of ths sample different from 7
+```{r}
+t.test(x = msleep$sleep_total, 
+       mu = 7, 
+       alternative = "two.sided")
+```
+
+# the aerage total sleep is statistically different than the one from Jabberwockies
+
+
+Perform an appropriate statistical test to determine whether omnivores sleep for significantly longer than herbivores, on average.
+#2_sample test; independant samples
+# alpha = 0.05%
+# h0: omni_sleep - herbi_seep < = 0
+# ha: omni_sleep - herbi_sleep > 0
+```{r}
+omni <- msleep %>%
+  filter(vore == "omni")
+
+herbivore <- msleep %>%
+  filter(vore == "herbi")
+
+t.test(x = omni$sleep_total, y = herbivore$sleep_total, 
+       alternative = "greater", 
+       paired = FALSE)
+```
+
+# p_value > 0.05 we cannot reject the null hypothesis 
+
+Perform an appropriate statistical test to determine whether the proportion of domesticated animals in the population of animal types is greater than 5%.
+
+# h0: prop_domesticated < = 5%
+# ha: prop_domesticated > 5%
+```{r}
+num_domesticated <- msleep %>%
+  filter(conservation == "domesticated") %>%
+  count()
+
+# we assum that h0 is true and proportion is 0.07
+std_error <- sqrt(0.05 * (1 - 0.05) / nrow(msleep)) 
+
+# check normal assumption
+0.05 * nrow(msleep) >= 10
+(1-0.05) * nrow(msleep) >= 10
+
+```
+
+# we fail to meet the assumption so we'll use a binomial test
+```{r}
+binom.test(x = num_domesticated$n, 
+           n = nrow(msleep), 
+           p = 0.05, 
+           alternative = "greater")
+```
+
+#p value is less than 0.05 we can reject the null hypothesis and say that the proportion of domesticated animals is greater than 5%
+
+Determine an appropriate sample size for the following problem:
+
+A quality analyst wants to estimate a 99% confidence interval to within ±0.01g for the mean weight of fruit pastels produced by a production line tomorrow. Prior evidence suggests the standard deviation in fruit pastel weights is 0.05g. What is the minimum number of fruit pastels the analyst should sample?
+
+
+```{r}
+n <- (qnorm(0.995)^2 * 0.05^2) / 0.01^2
+n
+```
+# we need at least 166fruit pastel for this
+
+
+
+Determine an appropriate sample size for the following problem:
+
+A clinical dietician wants to compare two different diets, A and B, for diabetic patients. 
+She hypothesizes that diet A (Group 1) will be different from diet B (Group 2), in terms of mean blood glucose. She plans to get a random sample of diabetic patients and randomly assign them to one of the two diets. At the end of the experiment, which lasts 6 weeks, a fasting blood glucose test will be conducted on each patient. She also expects that the average difference in blood glucose measure between the two group will be about 10 mg/dl. Furthermore, she also assumes the standard deviation of blood glucose distribution for diet A to be 15 mg/dl and the standard deviation for diet B to be 17 mg/dl. The dietician wants to know the number of subjects needed in each group assuming equal sized groups.
+```{r}
+library(WebPower)
+s_pooled <- sqrt((15^2 + 17^2)/2)
+d_glucose <- 10/s_pooled
+
+ wp.t(n1 = NULL,
+      d = d_glucose,
+      alpha = 0.05, 
+      power = 0.95, 
+      type = "two.sample", 
+      alternative = "two.sided")
+```
+
+
+
+What would the power of the test above be if the number of patients in each group was 100?
+
+```{r}
+ wp.t(n1 = 100,
+      d = d_glucose,
+      alpha = 0.05, 
+      power = NULL, 
+      type = "two.sample", 
+      alternative = "two.sided")
+```
+
+
+
+
+

@@ -48,7 +48,7 @@ groupwiseMean(Lot.Area ~ House.Style,
               data = ames, 
               conf = 0.99)
 ```
-# Some of the groups have very few observations 2.5Fin for example
+# Some of the groups have very few observations 2.5Fin for example but the CI does adjust for it
 
 Calculate a 99% CI for the proportion of houses in the data built before 1890. Try using the wilson and wald methods. How different are the bounds of the CIs given by the two methods?
 ```{r}
@@ -65,6 +65,8 @@ BinomCI(x = build,
         method = "wilson")
 ```
 
+
+
 ```{r}
 BinomCI(x = build, 
         n = sum, 
@@ -80,9 +82,14 @@ wald_true <- 0.006664508 - 0.0008440246
 ```
 
 # both methods have similar width for the CI the wald method shows a larger distance between the upr.ci for true and lower.ci for false than wilson
+# wald method = normal distribution
+# wilson pretends that the binomial distribution is continuous
 
 
 do a bit of reading on the Wald and Wilson methods. Why do you think the bounds produced by the two methods are more significantly different when the proportion is closer to 0? Which method would you choose for the ‘proportion before 1890’ CI?
+# if the proportion are too uneven use wilson else use wald
+
+
 
 Calculate 95% CIs for the proportion of total house sales made up by each level of House.Style in the data
 ```{r}
