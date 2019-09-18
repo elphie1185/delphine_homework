@@ -129,6 +129,7 @@ Determine an appropriate sample size for the following problem:
 
 A clinical dietician wants to compare two different diets, A and B, for diabetic patients. 
 She hypothesizes that diet A (Group 1) will be different from diet B (Group 2), in terms of mean blood glucose. She plans to get a random sample of diabetic patients and randomly assign them to one of the two diets. At the end of the experiment, which lasts 6 weeks, a fasting blood glucose test will be conducted on each patient. She also expects that the average difference in blood glucose measure between the two group will be about 10 mg/dl. Furthermore, she also assumes the standard deviation of blood glucose distribution for diet A to be 15 mg/dl and the standard deviation for diet B to be 17 mg/dl. The dietician wants to know the number of subjects needed in each group assuming equal sized groups.
+
 ```{r}
 library(WebPower)
 s_pooled <- sqrt((15^2 + 17^2)/2)
@@ -137,7 +138,7 @@ d_glucose <- 10/s_pooled
  wp.t(n1 = NULL,
       d = d_glucose,
       alpha = 0.05, 
-      power = 0.95, 
+      power = 0.8, 
       type = "two.sample", 
       alternative = "two.sided")
 ```
